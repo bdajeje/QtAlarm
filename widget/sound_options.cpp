@@ -12,6 +12,9 @@
 SoundOptions::SoundOptions(QWidget *parent)
   : QWidget(parent)
 {
+  setWindowTitle(tr("Sound Options"));
+  setWindowIcon(QIcon("../resources/sounds.jpg"));
+
   auto main_layout = new QVBoxLayout;
 
   // Retrieve volume property
@@ -28,6 +31,7 @@ SoundOptions::SoundOptions(QWidget *parent)
 
   main_layout->addWidget(m_widget_sound_label);
   main_layout->addWidget(m_widget_slider);
+  main_layout->addWidget( new QFrame() ); // Delimiter between zone (\todo to improve? (find a better delimiter))
   main_layout->addWidget(widget_select_file);
   main_layout->addWidget(m_widget_file_label);
   setLayout(main_layout);
