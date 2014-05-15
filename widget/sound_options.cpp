@@ -5,9 +5,12 @@
 
 #include <QFileDialog>
 #include <QHBoxLayout>
+#include <QKeyEvent>
 #include <QPushButton>
 #include <QSlider>
 #include <QVBoxLayout>
+
+#include <iostream> //\todo remove
 
 SoundOptions::SoundOptions(QWidget *parent)
   : QWidget(parent)
@@ -65,4 +68,12 @@ void SoundOptions::updateVolume(int value)
 void SoundOptions::saveVolume()
 {
   utils::Properties::save( utils::Property::AlarmVolume, QString::number(m_widget_slider->value()) );
+}
+
+void SoundOptions::keyReleaseEvent(QKeyEvent* event)
+{
+  if( event->key() == Qt::Key_Escape )
+    close();
+  else
+    QWidget::keyReleaseEvent(event);
 }

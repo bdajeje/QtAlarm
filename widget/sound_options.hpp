@@ -15,6 +15,10 @@ class SoundOptions final : public QWidget
 
     explicit SoundOptions(QWidget *parent = 0);
 
+  protected:
+
+    void keyReleaseEvent(QKeyEvent* event) override;
+
   private:
 
     void updateSelectFileUI(const QString& filepath);
