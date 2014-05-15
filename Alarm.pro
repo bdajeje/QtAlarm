@@ -19,11 +19,13 @@ SOURCES += main.cpp\
     widget/jlabel.cpp \
     widget/sound_options.cpp \
     utils/properties.cpp \
-    utils/files.cpp
+    utils/files.cpp \
+    utils/strings.cpp
 
 HEADERS  += mainwindow.hpp \
     widget/time_widget.hpp \
     widget/jlabel.hpp \
     widget/sound_options.hpp \
     utils/properties.hpp \
-    utils/files.hpp
+    utils/files.hpp \
+    utils/strings.hpp

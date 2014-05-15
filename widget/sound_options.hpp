@@ -17,7 +17,7 @@ class SoundOptions final : public QWidget
 
   private:
 
-    void updateVolumeUI(const QString& volume);
+    void updateSelectFileUI(const QString& filepath);
 
   private:
 
@@ -31,6 +31,7 @@ class SoundOptions final : public QWidget
 
     void selectFile();
     void updateVolume(int value);
+    void saveVolume();
 };
 
 #endif // SOUND_OPTIONS_HPP
