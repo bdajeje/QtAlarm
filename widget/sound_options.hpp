@@ -5,15 +5,15 @@
 
 #include <QLabel>
 #include <QSlider>
-#include <QWidget>
+#include <QDialog>
 
-class SoundOptions final : public QWidget
+class SoundOptions final : public QDialog
 {
   Q_OBJECT
 
   public:
 
-    explicit SoundOptions(QWidget *parent = 0);
+    explicit SoundOptions(QWidget *parent = 0, Qt::WindowFlags flags = 0);
 
   protected:
 
@@ -22,6 +22,7 @@ class SoundOptions final : public QWidget
   private:
 
     void updateSelectFileUI(const QString& filepath);
+    void setSelectedPath(const QString& path);
 
   private:
 
@@ -34,6 +35,7 @@ class SoundOptions final : public QWidget
   public slots:
 
     void selectFile();
+    void selectDirectory();
     void updateVolume(int value);
     void saveVolume();
 };

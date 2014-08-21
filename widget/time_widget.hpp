@@ -23,6 +23,7 @@ class TimeWidget : public QWidget
   protected:
 
     virtual int timeToWait() = 0;
+    virtual void saveValues() = 0;
     void cancelState();
     void startState();
     void stopTimer();

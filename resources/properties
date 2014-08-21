@@ -1,3 +1,9 @@
-sound_file=nani
+sound_file=/home/jeje/Desktop/test_sounds
 sound_volume=63
 sound_default=resources/sounds/default.ogg
+alarm_hour=8
+alarm_min=0
+alarm_sec=0
+chrono_hour=0
+chrono_min=0
+chrono_sec=1

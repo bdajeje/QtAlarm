@@ -73,6 +73,9 @@ void TimeWidget::cancelState()
 
 void TimeWidget::startState()
 {
+  // Save selected values
+  saveValues();
+
   // Get max value
   const auto time_to_wait = timeToWait();
 

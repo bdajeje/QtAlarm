@@ -2,10 +2,14 @@
 
 #include <iostream>
 
+#include <utils/files.hpp>
+#include <utils/math.hpp>
 #include <utils/properties.hpp>
 #include <widget/clock_widget.hpp>
 #include <widget/chrono_widget.hpp>
 
+#include <QCoreApplication>
+#include <QDir>
 #include <QFile>
 #include <QMessageBox>
 #include <QTabWidget>
@@ -22,12 +26,12 @@ MainWindow::MainWindow(QWidget *parent)
   auto widget_tab = new QTabWidget;
 
   // First tab
-  auto tab1 = new ChronoWidget();
-  widget_tab->addTab(tab1, tr("Chrono"));
+  auto alarm_tab = new ClockWidget();
+  widget_tab->addTab(alarm_tab, tr("Alarm"));
 
   // Second tab
-  auto tab2 = new ClockWidget();
-  widget_tab->addTab(tab2, tr("Alarm"));
+  auto chrono_tab = new ChronoWidget();
+  widget_tab->addTab(chrono_tab, tr("Chrono"));
 
   // Window icon
   const QIcon icon("resources/images/icon.png");
@@ -49,8 +53,9 @@ MainWindow::MainWindow(QWidget *parent)
   createMenu();
 
   // Connections
-  connect(tab1, SIGNAL(timeout()), this, SLOT(timeout()));
-  connect(tab2, SIGNAL(timeout()), this, SLOT(timeout()));
+  connect(chrono_tab, SIGNAL(timeout()), this, SLOT(timeout()));
+  connect(alarm_tab, SIGNAL(timeout()), this, SLOT(timeout()));
+  connect(m_tray_icon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(toggleWindowVisibility(QSystemTrayIcon::ActivationReason)));
 }
 
 MainWindow::~MainWindow()
@@ -58,23 +63,60 @@ MainWindow::~MainWindow()
   delete m_sound_options;
 }
 
+QString MainWindow::fileToPlay()
+{
+  QString filepath = utils::Properties::get(utils::Property::AlarmFile);
+
+  // Randomly select a sound if path is a directory
+  const QDir sound_directory = QDir(filepath);
+  if( sound_directory.exists() )
+  {
+    // List all sounds in this directory and get a random one
+    QStringList file_list = sound_directory.entryList(QDir::Files | QDir::NoDotAndDotDot | QDir::Readable);
+
+    // Get only sound files
+    static const QRegExp sounds_regex( "mp3|ogg" );
+    file_list = file_list.filter(sounds_regex);
+
+    // No usable file? Return default one
+    if( file_list.isEmpty() )
+    {
+      std::cerr << "No playable sound in directory '" << filepath.toStdString() << "', falling back on default sound";
+      return utils::Properties::get( utils::Property::DefaultSound );
+    }
+
+    // Randomly select a sound among the list of sounds
+    return utils::files::ensureDirEnd(filepath) + file_list.at( utils::random(0, file_list.size() - 1) );
+  }
+  else if( !QFile::exists(filepath) )
+  {
+    std::cerr << "Invalid file '" << filepath.toStdString() << "', falling back on default sound";
+    return utils::Properties::get( utils::Property::DefaultSound );
+  }
+  else return filepath;
+}
+
 void MainWindow::timeout()
 {
   // Show notification
   m_tray_icon->showMessage(tr("Alarm"), tr("It's time"));
 
-  QString filepath = utils::Properties::get(utils::Property::AlarmFile);
-  if( !QFile(filepath).exists() )
-  {
-    std::cerr << "Invalid file '" << filepath.toStdString() << "', falling back on default sound";
-    filepath = utils::Properties::get( utils::Property::DefaultSound );
-  }
-
   // Play sound
-  std::cout << "Playing '" << filepath.toStdString() << "'" << std::endl;
-  m_media_player->setMedia(QUrl::fromLocalFile( filepath ));
+  QString file_to_play = addApplicationPath( fileToPlay() );
+  std::cout << "Playing '" << file_to_play.toStdString() << "'" << std::endl;
+  m_media_player->setMedia(QUrl::fromLocalFile( file_to_play ));
   m_media_player->setVolume( utils::Properties::get(utils::Property::AlarmVolume).toInt() );
   m_media_player->play();
+}
+
+QString MainWindow::addApplicationPath(QString path)
+{
+  static const QString application_path = utils::files::ensureDirEnd(QCoreApplication::applicationDirPath());
+
+  if( path.startsWith('/') )
+    return path;
+
+  return application_path + path;
 }
 
 void MainWindow::createMenu()
@@ -85,7 +127,7 @@ void MainWindow::createMenu()
     auto action_quit = new QAction(tr("&Quit"), this);
     action_quit->setStatusTip(tr("Quit application"));
     action_quit->setIcon(QIcon("resources/images/quit.png"));
-    connect(action_quit, SIGNAL(triggered()), this, SLOT(closeApplication()));
+    connect(action_quit, SIGNAL(triggered()), this, SLOT(close()));
     menu_file->addAction(action_quit);
 
   // Options
@@ -115,14 +157,15 @@ void MainWindow::showAbout()
 void MainWindow::showSoundOptions()
 {
   if( !m_sound_options )
-    m_sound_options = new SoundOptions();
+    m_sound_options = new SoundOptions(this, Qt:: Dialog);
+  else
+    m_sound_options->move( pos().x(), pos().y() );
 
   m_sound_options->show();
 }
 
-void MainWindow::closeApplication()
+void MainWindow::toggleWindowVisibility(QSystemTrayIcon::ActivationReason reason)
 {
-  if( m_sound_options )
-    m_sound_options->close();
-  close();
+  if( reason == QSystemTrayIcon::Trigger )
+    isVisible() ? hide() : show();
 }

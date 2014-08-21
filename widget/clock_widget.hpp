@@ -12,6 +12,7 @@ class ClockWidget final : public TimeWidget
   protected:
 
     int timeToWait();
+    void saveValues();
 };
 
 #endif // CLOCK_WIDGET_HPP

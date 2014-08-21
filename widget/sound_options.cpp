@@ -10,10 +10,8 @@
 #include <QSlider>
 #include <QVBoxLayout>
 
-#include <iostream> //\todo remove
-
-SoundOptions::SoundOptions(QWidget *parent)
-  : QWidget(parent)
+SoundOptions::SoundOptions(QWidget *parent, Qt::WindowFlags flags)
+  : QDialog(parent, flags)
 {
   setWindowTitle(tr("Sound Options"));
   setWindowIcon(QIcon("resources/images/sounds.jpg"));
@@ -29,13 +27,17 @@ SoundOptions::SoundOptions(QWidget *parent)
   m_widget_slider->setMaximum(100);
   m_widget_slider->setValue(volume.toInt());
 
-  auto widget_select_file = new QPushButton(tr("Select alarm sound"));
-  m_widget_file_label     = new QLabel();
+  auto widget_select_file      = new QPushButton(tr("Select specific sound"));
+  auto widget_select_directory = new QPushButton(tr("Select directory of sounds"));
+  m_widget_file_label          = new QLabel();
 
   main_layout->addWidget(m_widget_sound_label);
   main_layout->addWidget(m_widget_slider);
   main_layout->addWidget( new QFrame() ); // Delimiter between zone (\todo to improve? (find a better delimiter))
   main_layout->addWidget(widget_select_file);
+  main_layout->addWidget(widget_select_directory);
+  main_layout->addWidget( new QFrame() ); // Delimiter between zone (\todo to improve? (find a better delimiter))
+  main_layout->addWidget( new QLabel(tr("Selected sound(s):")) );
   main_layout->addWidget(m_widget_file_label);
   setLayout(main_layout);
 
@@ -46,16 +48,26 @@ SoundOptions::SoundOptions(QWidget *parent)
   connect(m_widget_slider, SIGNAL(valueChanged(int)), this, SLOT(updateVolume(int)));
   connect(m_widget_slider, SIGNAL(sliderReleased()), this, SLOT(saveVolume()));
   connect(widget_select_file, SIGNAL(pressed()), this, SLOT(selectFile()));
+  connect(widget_select_directory, SIGNAL(pressed()), this, SLOT(selectDirectory()));
+}
+
+void SoundOptions::setSelectedPath(const QString& path)
+{
+  if(path.isEmpty())
+    return;
+
+  updateSelectFileUI(path);
+  utils::Properties::save( utils::Property::AlarmFile, path );
 }
 
 void SoundOptions::selectFile()
 {
-  const QString filepath = QFileDialog::getOpenFileName(this, tr("Open File"), "", tr("Files (*.ogg *.mp3)"));
-  if(filepath.isEmpty())
-    return;
+  setSelectedPath( QFileDialog::getOpenFileName(this, tr("Choose File"), "", tr("Files (*.ogg *.mp3)")) );
+}
 
-  updateSelectFileUI(filepath);
-  utils::Properties::save( utils::Property::AlarmFile, filepath );
+void SoundOptions::selectDirectory()
+{
+  setSelectedPath( QFileDialog::getExistingDirectory(this, tr("Choose Directory")) );
 }
 
 void SoundOptions::updateSelectFileUI(const QString& filepath)

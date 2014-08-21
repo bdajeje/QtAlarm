@@ -12,6 +12,7 @@ class ChronoWidget final : public TimeWidget
   protected:
 
     int timeToWait();
+    void saveValues();
 };
 
 #endif // CHRONO_WIDGET_HPP

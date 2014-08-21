@@ -45,5 +45,13 @@ bool create( const std::string& filepath, const std::string& content )
   return true;
 }
 
+QString ensureDirEnd( QString input )
+{
+  if( input.endsWith('/') )
+    return input;
+  else
+    return input + "/";
+}
+
 } // namespace files
 } // namespace utils

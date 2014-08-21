@@ -19,6 +19,8 @@ class MainWindow : public QMainWindow
   private:
 
     void createMenu();
+    QString fileToPlay();
+    QString addApplicationPath(QString path);
 
   private:
 
@@ -31,7 +33,7 @@ class MainWindow : public QMainWindow
     void timeout();
     void showAbout();
     void showSoundOptions();
-    void closeApplication();
+    void toggleWindowVisibility(QSystemTrayIcon::ActivationReason);
 };
 
 #endif // MAINWINDOW_HPP

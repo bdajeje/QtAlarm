@@ -9,7 +9,10 @@
 namespace utils {
 
 /*! Existing properties */
-enum Property { AlarmFile, AlarmVolume, DefaultSound, Undefined };
+enum Property { AlarmFile, AlarmVolume, DefaultSound,
+                ClockHour, ClockMin, ClockSec,
+                ChronoHour, ChronoMin, ChronoSec,
+                Undefined };
 
 Property toProperty(const QString& from);
 const QString& toString(Property property);

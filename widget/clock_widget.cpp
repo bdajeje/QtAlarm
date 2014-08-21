@@ -4,12 +4,27 @@
 
 #include <QTime>
 
+#include <utils/properties.hpp>
+
 ClockWidget::ClockWidget(QWidget *parent)
   : TimeWidget(parent)
 {
+  // Set maximum values
   m_widget_hours_input->setMaximum(24);
   m_widget_mins_input->setMaximum(60);
   m_widget_secs_input->setMaximum(60);
+
+  // Set last state
+  const QString& hour_str = utils::Properties::get( utils::Property::ClockHour );
+  const QString& min_str  = utils::Properties::get( utils::Property::ClockMin );
+  const QString& sec_str  = utils::Properties::get( utils::Property::ClockSec );
+
+  if( !hour_str.isEmpty() )
+    m_widget_hours_input->setValue( hour_str.toInt() );
+  if( !min_str.isEmpty() )
+    m_widget_mins_input->setValue( min_str.toInt() );
+  if( !sec_str.isEmpty() )
+    m_widget_secs_input->setValue( sec_str.toInt() );
 }
 
 int ClockWidget::timeToWait()
@@ -21,18 +36,11 @@ int ClockWidget::timeToWait()
     return current_time.secsTo(selected_time);
   else
     return secs_in_one_day - selected_time.secsTo(current_time);
+}
 
-//  if( current_time.hour() > selected_hour  &&
-//      current_time.minute() > selected_min &&
-//      current_time.second() > selected_sec )
-//    return (current_time.hour() - selected_hour) * secs_in_one_hour +
-//           (current_time.minute() - selected_min) * secs_in_one_minute +
-//           current_time.second() - selected_sec;
-//  else
-//  {
-//    const auto hour_diff = selected_hour + 24 - current_time.hour();
-
-//    return hour_diff * secs_in_one_hour +
-//           ;
-//  }
+void ClockWidget::saveValues()
+{
+  utils::Properties::save( utils::Property::ClockHour, QString::number(m_widget_hours_input->value()) );
+  utils::Properties::save( utils::Property::ClockMin, QString::number(m_widget_mins_input->value()) );
+  utils::Properties::save( utils::Property::ClockSec, QString::number(m_widget_secs_input->value()) );
 }
