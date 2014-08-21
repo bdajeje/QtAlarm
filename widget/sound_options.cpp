@@ -16,7 +16,7 @@ SoundOptions::SoundOptions(QWidget *parent)
   : QWidget(parent)
 {
   setWindowTitle(tr("Sound Options"));
-  setWindowIcon(QIcon("../resources/sounds.jpg"));
+  setWindowIcon(QIcon("resources/images/sounds.jpg"));
 
   auto main_layout = new QVBoxLayout;
 
@@ -51,6 +51,9 @@ SoundOptions::SoundOptions(QWidget *parent)
 void SoundOptions::selectFile()
 {
   const QString filepath = QFileDialog::getOpenFileName(this, tr("Open File"), "", tr("Files (*.ogg *.mp3)"));
+  if(filepath.isEmpty())
+    return;
+
   updateSelectFileUI(filepath);
   utils::Properties::save( utils::Property::AlarmFile, filepath );
 }

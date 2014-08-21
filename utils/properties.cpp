@@ -2,16 +2,19 @@
 
 #include <utils/files.hpp>
 
+#include <iostream>
 #include <vector>
 
+#include <QCoreApplication>
 #include <QStringList>
 
 namespace utils {
 
 namespace properties {
-  const QString sound_file   = "sound_file";
-  const QString sound_volume = "sound_volume";
-  const QString undefined    = "Undefined property";
+  const QString sound_file    = "sound_file";
+  const QString sound_volume  = "sound_volume";
+  const QString default_sound = "sound_default";
+  const QString undefined     = "Undefined property";
 }
 
 Properties::Properties(QString filepath)
@@ -43,8 +46,11 @@ Properties::Properties(QString filepath)
   m_valid = true;
 
   // Put default values for empty fields
-  verify( Property::AlarmFile, "../resources/alarm.ogg" );
+  verify( Property::DefaultSound, "resources/sounds/default.ogg" );
   verify( Property::AlarmVolume, "50" );
+
+  // Override path values to add application filepath
+  m_properties[Property::DefaultSound] = QCoreApplication::applicationDirPath() + "/" + m_properties[Property::DefaultSound];
 }
 
 void Properties::verify(Property property, const QString& value)
@@ -55,7 +61,7 @@ void Properties::verify(Property property, const QString& value)
 
 Properties& Properties::instance()
 {
-  static Properties instance("../resources/properties");
+  static Properties instance("resources/properties");
   return instance;
 }
 
@@ -91,6 +97,8 @@ Property toProperty(const QString& from)
     return Property::AlarmFile;
   else if(clean_from == properties::sound_volume)
     return Property::AlarmVolume;
+  else if(clean_from == properties::default_sound)
+    return Property::DefaultSound;
 
   return Property::Undefined;
 }
@@ -99,9 +107,10 @@ const QString& toString(Property property)
 {
   switch(property)
   {
-    case Property::AlarmFile:   return properties::sound_file;
-    case Property::AlarmVolume: return properties::sound_volume;
-    default:                    return properties::undefined;
+    case Property::AlarmFile:    return properties::sound_file;
+    case Property::AlarmVolume:  return properties::sound_volume;
+    case Property::DefaultSound: return properties::default_sound;
+    default:                     return properties::undefined;
 
   }
 }

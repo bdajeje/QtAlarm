@@ -20,7 +20,9 @@ SOURCES += main.cpp\
     widget/sound_options.cpp \
     utils/properties.cpp \
     utils/files.cpp \
-    utils/strings.cpp
+    utils/strings.cpp \
+    widget/chrono_widget.cpp \
+    widget/clock_widget.cpp
 
 HEADERS  += mainwindow.hpp \
     widget/time_widget.hpp \
@@ -28,4 +30,6 @@ HEADERS  += mainwindow.hpp \
     widget/sound_options.hpp \
     utils/properties.hpp \
     utils/files.hpp \
-    utils/strings.hpp
+    utils/strings.hpp \
+    widget/chrono_widget.hpp \
+    widget/clock_widget.hpp

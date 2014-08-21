@@ -1,43 +1,49 @@
 #ifndef TIME_WIDGET_HPP
 #define TIME_WIDGET_HPP
 
+#include <QCheckBox>
 #include <QProgressBar>
 #include <QPushButton>
 #include <QSpinBox>
 #include <QTimer>
 #include <QWidget>
 
-class TimeWidget final : public QWidget
+class TimeWidget : public QWidget
 {
   Q_OBJECT
 
   public:
 
-    /*! Possible behavior for the progress bar */
-    enum class Type { Increase, Decrease };
+    explicit TimeWidget(QWidget *parent = 0);
 
-    explicit TimeWidget(Type type, QWidget *parent = 0);  
+    virtual ~TimeWidget() {}
 
-  private:
+    bool isRepeat() const { return m_widget_repeat_box->isChecked(); }
 
+  protected:
+
+    virtual int timeToWait() = 0;
     void cancelState();
-    void startState();    
+    void startState();
     void stopTimer();
     void updateProgressText();
 
-  private:
+  protected:
 
     QPushButton*  m_widget_button;
     QProgressBar* m_widget_progress;
     QSpinBox*     m_widget_hours_input;
     QSpinBox*     m_widget_mins_input;
     QSpinBox*     m_widget_secs_input;
+    QCheckBox*    m_widget_repeat_box;
     QTimer*       m_timer;
-
-    const Type m_type;
 
     /*! Current state (enabled/disabled) */
     bool m_active {false};
+
+    static constexpr unsigned int secs_in_one_day    = 86400;
+    static constexpr unsigned int secs_in_one_hour   = 3600;
+    static constexpr unsigned int secs_in_one_minute = 60;
 
   public slots:
 
@@ -50,7 +56,6 @@ class TimeWidget final : public QWidget
   signals:
 
     void timeout();
-
 };
 
 #endif // TIME_WIDGET_HPP

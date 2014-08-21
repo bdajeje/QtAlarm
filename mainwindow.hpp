@@ -31,6 +31,7 @@ class MainWindow : public QMainWindow
     void timeout();
     void showAbout();
     void showSoundOptions();
+    void closeApplication();
 };
 
 #endif // MAINWINDOW_HPP
