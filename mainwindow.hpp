@@ -19,6 +19,8 @@ class MainWindow : public QMainWindow
   private:
 
     void createMenu();
+    QMenu* createTrayMenu();
+    QAction* createQuitAction();
     QString fileToPlay();
     QString addApplicationPath(QString path);
 

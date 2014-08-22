@@ -41,6 +41,7 @@ MainWindow::MainWindow(QWidget *parent)
   m_tray_icon = new QSystemTrayIcon(icon, this);
   m_tray_icon->show();
   m_tray_icon->setToolTip(tr("Alarm"));
+  m_tray_icon->setContextMenu( createTrayMenu() );
 
   // Media player
   m_media_player = new QMediaPlayer(this);
@@ -124,11 +125,7 @@ void MainWindow::createMenu()
   // File
   auto menu_file = menuBar()->addMenu(tr("&File"));
     // Quit
-    auto action_quit = new QAction(tr("&Quit"), this);
-    action_quit->setStatusTip(tr("Quit application"));
-    action_quit->setIcon(QIcon("resources/images/quit.png"));
-    connect(action_quit, SIGNAL(triggered()), this, SLOT(close()));
-    menu_file->addAction(action_quit);
+    menu_file->addAction( createQuitAction() );
 
   // Options
   auto menu_options = menuBar()->addMenu(tr("&Options"));
@@ -147,6 +144,22 @@ void MainWindow::createMenu()
     action_about->setIcon(QIcon("resources/images/about.png"));
     connect(action_about, SIGNAL(triggered()), this, SLOT(showAbout()));
     menu_help->addAction(action_about);
+}
+
+QMenu* MainWindow::createTrayMenu()
+{
+  QMenu* tray_menu = new QMenu();
+  tray_menu->addAction( createQuitAction() );
+  return tray_menu;
+}
+
+QAction* MainWindow::createQuitAction()
+{
+  auto action_quit = new QAction(tr("&Quit"), this);
+  action_quit->setStatusTip(tr("Quit application"));
+  action_quit->setIcon(QIcon("resources/images/quit.png"));
+  connect(action_quit, SIGNAL(triggered()), this, SLOT(close()));
+  return action_quit;
 }
 
 void MainWindow::showAbout()
