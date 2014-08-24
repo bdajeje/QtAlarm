@@ -12,6 +12,13 @@ namespace utils {
 enum Property { AlarmFile, AlarmVolume, DefaultSound,
                 ClockHour, ClockMin, ClockSec,
                 ChronoHour, ChronoMin, ChronoSec,
+                ClockRepeatMonday,
+                ClockRepeatTuesday,
+                ClockRepeatWednesday,
+                ClockRepeatThursday,
+                ClockRepeatFriday,
+                ClockRepeatSaturday,
+                ClockRepeatSunday,
                 Undefined };
 
 Property toProperty(const QString& from);

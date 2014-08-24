@@ -104,10 +104,16 @@ void MainWindow::timeout()
 
   // Play sound
   QString file_to_play = addApplicationPath( fileToPlay() );
-  std::cout << "Playing '" << file_to_play.toStdString() << "'" << std::endl;
   m_media_player->setMedia(QUrl::fromLocalFile( file_to_play ));
   m_media_player->setVolume( utils::Properties::get(utils::Property::AlarmVolume).toInt() );
   m_media_player->play();
+
+  // Display stop window
+  if( !m_stop_window ) {
+    m_stop_window = new StopWindow(this, Qt::Dialog);
+    connect(m_stop_window, SIGNAL(stopped()), this, SLOT(stopSound()));
+  }
+  m_stop_window->show();
 }
 
 QString MainWindow::addApplicationPath(QString path)
@@ -181,4 +187,10 @@ void MainWindow::toggleWindowVisibility(QSystemTrayIcon::ActivationReason reason
 {
   if( reason == QSystemTrayIcon::Trigger )
     isVisible() ? hide() : show();
+}
+
+void MainWindow::stopSound()
+{
+  m_media_player->stop();
+  m_stop_window->hide();
 }

@@ -9,10 +9,16 @@ class ChronoWidget final : public TimeWidget
 
     ChronoWidget(QWidget *parent = 0);
 
+    virtual bool isRepeat() const;
+
   protected:
 
     int timeToWait();
     void saveValues();
+
+  protected:
+
+    QCheckBox* m_widget_repeat_box;
 };
 
 #endif // CHRONO_WIDGET_HPP

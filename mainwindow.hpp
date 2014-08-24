@@ -2,6 +2,7 @@
 #define MAINWINDOW_HPP
 
 #include "widget/sound_options.hpp"
+#include "widget/stop_window.hpp"
 
 #include <QMainWindow>
 #include <QMediaPlayer>
@@ -29,6 +30,7 @@ class MainWindow : public QMainWindow
     QSystemTrayIcon* m_tray_icon;
     QMediaPlayer*    m_media_player;
     SoundOptions*    m_sound_options {nullptr};
+    StopWindow*      m_stop_window {nullptr};
 
   public slots:
 
@@ -36,6 +38,7 @@ class MainWindow : public QMainWindow
     void showAbout();
     void showSoundOptions();
     void toggleWindowVisibility(QSystemTrayIcon::ActivationReason);
+    void stopSound();
 };
 
 #endif // MAINWINDOW_HPP

@@ -2,15 +2,16 @@
 
 #include "widget/jlabel.hpp"
 
+#include <iostream>
+
 #include <QMessageBox>
 #include <QHBoxLayout>
 #include <QSpinBox>
-#include <QVBoxLayout>
 
 TimeWidget::TimeWidget(QWidget *parent)
   : QWidget(parent)
 {
-  auto main_layout = new QVBoxLayout(this);
+  m_main_layout = new QVBoxLayout(this);
 
   // Time inputs
   auto widget_hours_label = new JLabel(tr("Hours"));
@@ -22,8 +23,6 @@ TimeWidget::TimeWidget(QWidget *parent)
   auto widget_secs_label = new JLabel(tr("Seconds"));
   m_widget_secs_input = new QSpinBox;
   m_widget_secs_input->setMinimum(0);
-
-  m_widget_repeat_box = new QCheckBox(tr("Repeat"));
 
   m_widget_progress = new QProgressBar;
   m_widget_progress->setMinimum(0);
@@ -39,11 +38,10 @@ TimeWidget::TimeWidget(QWidget *parent)
   time_input_layout->addWidget(m_widget_hours_input);
   time_input_layout->addWidget(m_widget_mins_input);
   time_input_layout->addWidget(m_widget_secs_input);
-  main_layout->addLayout(time_label_layout);
-  main_layout->addLayout(time_input_layout);
-  main_layout->addWidget(m_widget_repeat_box);
-  main_layout->addWidget(m_widget_progress);
-  main_layout->addWidget(m_widget_button);
+  m_main_layout->addLayout(time_label_layout);
+  m_main_layout->addLayout(time_input_layout);
+  m_main_layout->addWidget(m_widget_progress);
+  m_main_layout->addWidget(m_widget_button);
 
   m_timer = new QTimer(this);
 

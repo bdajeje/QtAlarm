@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     utils/strings.cpp \
     widget/chrono_widget.cpp \
     widget/clock_widget.cpp \
-    utils/math.cpp
+    utils/math.cpp \
+    widget/stop_window.cpp
 
 HEADERS  += mainwindow.hpp \
     widget/time_widget.hpp \
@@ -34,4 +35,5 @@ HEADERS  += mainwindow.hpp \
     utils/strings.hpp \
     widget/chrono_widget.hpp \
     widget/clock_widget.hpp \
-    utils/math.hpp
+    utils/math.hpp \
+    widget/stop_window.hpp

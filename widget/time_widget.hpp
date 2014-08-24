@@ -6,6 +6,7 @@
 #include <QPushButton>
 #include <QSpinBox>
 #include <QTimer>
+#include <QVBoxLayout>
 #include <QWidget>
 
 class TimeWidget : public QWidget
@@ -18,7 +19,7 @@ class TimeWidget : public QWidget
 
     virtual ~TimeWidget() {}
 
-    bool isRepeat() const { return m_widget_repeat_box->isChecked(); }
+    virtual bool isRepeat() const = 0;
 
   protected:
 
@@ -31,12 +32,12 @@ class TimeWidget : public QWidget
 
   protected:
 
+    QVBoxLayout*  m_main_layout;
     QPushButton*  m_widget_button;
     QProgressBar* m_widget_progress;
     QSpinBox*     m_widget_hours_input;
     QSpinBox*     m_widget_mins_input;
     QSpinBox*     m_widget_secs_input;
-    QCheckBox*    m_widget_repeat_box;
     QTimer*       m_timer;
 
     /*! Current state (enabled/disabled) */

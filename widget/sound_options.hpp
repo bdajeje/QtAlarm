@@ -30,8 +30,6 @@ class SoundOptions final : public QDialog
     QLabel*  m_widget_file_label;
     QSlider* m_widget_slider;
 
-  signals:
-
   public slots:
 
     void selectFile();
