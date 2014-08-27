@@ -12,8 +12,6 @@ class ClockWidget final : public TimeWidget
 
     ClockWidget(QWidget *parent = 0);
 
-    virtual bool isRepeat() const;
-
   protected:
 
     std::array<QCheckBox*, 7> m_widget_days;
@@ -22,8 +20,10 @@ class ClockWidget final : public TimeWidget
 
   protected:
 
-    int timeToWait();
-    void saveValues();
+    virtual int timeToWait() const override;
+    virtual void saveValues() const override;
+    QDateTime nextDateTime() const;
+    QDateTime selectedDateTime() const;
 };
 
 #endif // CLOCK_WIDGET_HPP

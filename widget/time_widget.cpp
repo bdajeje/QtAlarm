@@ -67,6 +67,8 @@ void TimeWidget::cancelState()
   m_widget_progress->setValue(0);
   m_widget_progress->setTextVisible(false);
   m_timer->stop();
+
+  emit stopped();
 }
 
 void TimeWidget::startState()
@@ -98,20 +100,19 @@ void TimeWidget::startState()
   m_timer->start(1000); // In milliseconds
 }
 
-void TimeWidget::stopTimer()
+void TimeWidget::countdownReached()
 {
   // Stop timer
   m_timer->stop();
 
   // Update UI
-  toggleState();
+  m_widget_button->setText(tr("STOP"));
+
+  // Focus button for easy stop
+  m_widget_button->setFocus();
 
   // Emit end of timer
   emit timeout();
-
-  // Repeat mode?
-  if( isRepeat() )
-    startState();
 }
 
 void TimeWidget::updateTime()
@@ -119,7 +120,7 @@ void TimeWidget::updateTime()
   // Update progress bar value
   m_widget_progress->setValue( m_widget_progress->value() - 1 );
   if(m_widget_progress->value() == 0)
-    stopTimer();
+    countdownReached();
 
   // Update progress bar text
   updateProgressText();

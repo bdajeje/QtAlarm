@@ -19,15 +19,13 @@ class TimeWidget : public QWidget
 
     virtual ~TimeWidget() {}
 
-    virtual bool isRepeat() const = 0;
-
   protected:
 
-    virtual int timeToWait() = 0;
-    virtual void saveValues() = 0;
+    virtual int timeToWait() const = 0;
+    virtual void saveValues() const = 0;
     void cancelState();
     void startState();
-    void stopTimer();
+    void countdownReached();
     void updateProgressText();
 
   protected:
@@ -58,6 +56,7 @@ class TimeWidget : public QWidget
   signals:
 
     void timeout();
+    void stopped();
 };
 
 #endif // TIME_WIDGET_HPP

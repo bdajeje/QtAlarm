@@ -9,7 +9,7 @@
 namespace utils {
 
 /*! Existing properties */
-enum Property { AlarmFile, AlarmVolume, DefaultSound,
+enum Property { AlarmFile, Volume, DefaultSound, FadeVolume,
                 ClockHour, ClockMin, ClockSec,
                 ChronoHour, ChronoMin, ChronoSec,
                 ClockRepeatMonday,

@@ -26,6 +26,7 @@ namespace properties {
   const QString repeat_friday    = "repeat_friday";
   const QString repeat_saturday  = "repeat_saturday";
   const QString repeat_sunday    = "repeat_sunday";
+  const QString volume_fading    = "volume_fading";
   const QString undefined        = "Undefined property";
 }
 
@@ -59,7 +60,7 @@ Properties::Properties(QString filepath)
 
   // Put default values for empty fields
   verify( Property::DefaultSound, "resources/sounds/default.ogg" );
-  verify( Property::AlarmVolume, "50" );
+  verify( Property::Volume, "50" );
 }
 
 void Properties::verify(Property property, const QString& value)
@@ -105,7 +106,7 @@ Property toProperty(const QString& from)
   if(clean_from == properties::sound_file)
     return Property::AlarmFile;
   else if(clean_from == properties::sound_volume)
-    return Property::AlarmVolume;
+    return Property::Volume;
   else if(clean_from == properties::default_sound)
     return Property::DefaultSound;
   else if(clean_from == properties::alarm_hour)
@@ -134,6 +135,8 @@ Property toProperty(const QString& from)
     return Property::ClockRepeatSaturday;
   else if(clean_from == properties::repeat_sunday )
     return Property::ClockRepeatSunday;
+  else if(clean_from == properties::volume_fading )
+    return Property::FadeVolume;
 
   std::cerr << "Unknown property: " << from.toStdString() << std::endl;
   return Property::Undefined;
@@ -144,7 +147,7 @@ const QString& toString(Property property)
   switch(property)
   {
     case Property::AlarmFile:            return properties::sound_file;
-    case Property::AlarmVolume:          return properties::sound_volume;
+    case Property::Volume:          return properties::sound_volume;
     case Property::DefaultSound:         return properties::default_sound;
     case Property::ClockHour:            return properties::alarm_hour;
     case Property::ClockMin:             return properties::alarm_min;
@@ -159,6 +162,7 @@ const QString& toString(Property property)
     case Property::ClockRepeatFriday:    return properties::repeat_friday;
     case Property::ClockRepeatSaturday:  return properties::repeat_saturday;
     case Property::ClockRepeatSunday:    return properties::repeat_sunday;
+    case Property::FadeVolume:           return properties::volume_fading;
     default:
     {
       std::cerr << "Unknown property: " << property << std::endl;

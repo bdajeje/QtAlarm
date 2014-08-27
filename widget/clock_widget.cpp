@@ -56,28 +56,50 @@ ClockWidget::ClockWidget(QWidget *parent)
   }
 }
 
-int ClockWidget::timeToWait()
+int ClockWidget::timeToWait() const
 {
-  const auto& current_time  = QTime::currentTime();
-  const auto& selected_time = QTime(m_widget_hours_input->value(), m_widget_mins_input->value(), m_widget_secs_input->value());
-
-  if( selected_time > current_time )
-    return current_time.secsTo(selected_time);
-  else
-    return secs_in_one_day - selected_time.secsTo(current_time);
+  const auto current_date = QDateTime::currentDateTime();
+  const auto next_date    = nextDateTime();
+  return current_date.secsTo(next_date);
 }
 
-void ClockWidget::saveValues()
+QDateTime ClockWidget::selectedDateTime() const
+{
+  return QDateTime(QDate::currentDate(), {m_widget_hours_input->value(), m_widget_mins_input->value(), m_widget_secs_input->value()});
+}
+
+QDateTime ClockWidget::nextDateTime() const
+{
+  // Get next time, but date is not set
+  auto next_date = selectedDateTime();
+  bool found = false;
+
+  // Try to find next day to trigger
+  for( int i = 0; i < number_days; ++i )
+  {
+    int day_in_week = next_date.date().dayOfWeek() - 1; // Day in week starts at 1
+    int day_offset  = (day_in_week >= number_days) ? number_days - day_in_week : day_in_week;
+    if( m_widget_days[day_offset]->isChecked() )
+    {
+      found = true;
+      break;
+    }
+
+    next_date = next_date.addDays(1);
+  }
+
+  // Not found ? Reset selected date time
+  if(!found)
+    next_date = selectedDateTime();
+
+  return (next_date < QDateTime::currentDateTime()) ? next_date.addDays(1) : next_date;
+}
+
+void ClockWidget::saveValues() const
 {
   utils::Properties::save( utils::Property::ClockHour, QString::number(m_widget_hours_input->value()) );
   utils::Properties::save( utils::Property::ClockMin, QString::number(m_widget_mins_input->value()) );
   utils::Properties::save( utils::Property::ClockSec, QString::number(m_widget_secs_input->value()) );
   for( int i = 0; i < number_days; ++i )
     utils::Properties::save( day_property[i], QString::number(m_widget_days[i]->isChecked()) );
-}
-
-bool ClockWidget::isRepeat() const
-{
-  int current_day = QDateTime::currentDateTime().date().dayOfWeek() - 1;
-  return m_widget_days[current_day]->isChecked();
 }
