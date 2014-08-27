@@ -214,7 +214,29 @@ QAction* MainWindow::createQuitAction()
 
 void MainWindow::showAbout()
 {
-  QMessageBox::information(this, tr("About"), tr("About_text"));
+  static const QString about_text = R"MTEXT(
+Alarm is a simple application which starts a sound whenever you want.
+There are two different possible alarms:
+
+1. Clock
+Set a time when to trigger the alarm.
+If there is no selected day, the alarm is triggered as soon as the specified time is reached.
+If at least one day is specified then the alarm is be triggered at the next selected day.
+
+2. Countdown
+The alarm is triggered when the time reach 0 seconds.
+
+To stop the alarm you simply need to push the stop button.
+You can cancel the alarm at any time by clicking on the same button you used to start it.
+You can also cancel the alarm from the system tray icon menu.
+
+You can specified several options in the 'Options' menu:
+- Volume: Set the volume of the alarm in percentage.
+- Smooth alarm: Time to reach, in seconds, the maximum volume. You can disable this feature by setting a value of 0.
+- Sound to play: Select a file to use as ringtone.
+- Sound to play in directory: Select a directory where to randomly pick a sound to play as ringtone.
+                                    )MTEXT";
+  QMessageBox::information(this, tr("About"), about_text);
 }
 
 void MainWindow::showSoundOptions()
