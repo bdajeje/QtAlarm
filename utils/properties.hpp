@@ -16,15 +16,12 @@ enum Property { AlarmFile, Volume, DefaultSound, FadeVolume,
                 ClockRepeatMonday, ClockRepeatTuesday, ClockRepeatWednesday, ClockRepeatThursday, ClockRepeatFriday, ClockRepeatSaturday, ClockRepeatSunday,
                 Undefined };
 
-Property toProperty(const QString& from);
-const QString& toString(Property property);
-
 class Properties final
 {
   public:
 
     static Properties& instance();
-    static const QString& get( Property property );
+    static const QString& get( Property property ) { return instance().m_properties_values[property]; }
     static bool save( Property property, const QString& value );
     static bool isValid() { return instance().m_valid; }
 
@@ -35,10 +32,13 @@ class Properties final
     Properties(QString filepath);
     bool save();
     void verify(Property property, const QString& value);
+    void initProperties();
+    void set(QString key, QString value);
 
   private:
 
-    std::map<Property, QString> m_properties;
+    std::map<Property, QString> m_properties_keys;
+    std::map<Property, QString> m_properties_values;
     const QString m_filepath;
     bool m_valid {false};
 };
