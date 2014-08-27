@@ -2,11 +2,12 @@
 
 #include <iostream>
 
-#include <utils/files.hpp>
-#include <utils/math.hpp>
-#include <utils/properties.hpp>
-#include <widget/clock_widget.hpp>
-#include <widget/chrono_widget.hpp>
+#include "utils/files.hpp"
+#include "utils/math.hpp"
+#include "utils/properties.hpp"
+#include "utils/icons_manager.hpp"
+#include "widget/clock_widget.hpp"
+#include "widget/chrono_widget.hpp"
 
 #include <QCoreApplication>
 #include <QDir>
@@ -35,8 +36,8 @@ MainWindow::MainWindow(QWidget *parent)
   widget_tab->addTab(chrono_tab, tr("Chrono"));
 
   // Window icon
-  const QIcon icon("resources/images/icon.png");
-  setWindowIcon(icon);
+  const QIcon& icon = utils::IconsManager::get("icon.png");
+  setWindowIcon( icon );
 
   // System tray
   m_tray_icon = new QSystemTrayIcon(icon, this);
@@ -171,7 +172,7 @@ void MainWindow::createMenu()
     // Sounds
     auto action_sounds = new QAction(tr("&Sounds"), this);
     action_sounds->setStatusTip(tr("Update sound options"));
-    action_sounds->setIcon(QIcon("resources/images/sounds.jpg"));
+    action_sounds->setIcon(utils::IconsManager::get("sounds.jpg"));
     connect(action_sounds, SIGNAL(triggered()), this, SLOT(showSoundOptions()));
     menu_options->addAction(action_sounds);
 
@@ -180,7 +181,7 @@ void MainWindow::createMenu()
     // About
     auto action_about = new QAction(tr("&About"), this);
     action_about->setStatusTip(tr("Information about this application"));
-    action_about->setIcon(QIcon("resources/images/about.png"));
+    action_about->setIcon(utils::IconsManager::get("about.png"));
     connect(action_about, SIGNAL(triggered()), this, SLOT(showAbout()));
     menu_help->addAction(action_about);
 }
@@ -192,7 +193,7 @@ QMenu* MainWindow::createTrayMenu()
   // Stop alarm
   m_action_stop_alarm = new QAction(tr("&Stop"), this);
   m_action_stop_alarm->setStatusTip(tr("Stop alarm"));
-  m_action_stop_alarm->setIcon(QIcon("resources/images/stop.ico"));
+  m_action_stop_alarm->setIcon(utils::IconsManager::get("stop.ico"));
   m_action_stop_alarm->setEnabled(false);
   connect(m_action_stop_alarm, SIGNAL(triggered()), this, SIGNAL(menuStopSound()));
   tray_menu->addAction( m_action_stop_alarm );
@@ -207,7 +208,7 @@ QAction* MainWindow::createQuitAction()
 {
   auto action_quit = new QAction(tr("&Quit"), this);
   action_quit->setStatusTip(tr("Quit application"));
-  action_quit->setIcon(QIcon("resources/images/quit.png"));
+  action_quit->setIcon(utils::IconsManager::get("quit.png"));
   connect(action_quit, SIGNAL(triggered()), this, SLOT(close()));
   return action_quit;
 }

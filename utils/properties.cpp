@@ -5,18 +5,19 @@
 #include <iostream>
 #include <vector>
 
+#include <QApplication>
 #include <QStringList>
 
 namespace utils {
 
 Properties::Properties(QString filepath)
-  : m_filepath(std::move(filepath))
+  : m_filepath( filepath )
 {
   initProperties();
 
   // Read property files
   std::string content;
-  if(!files::read(m_filepath.toStdString(), content) || content.empty())
+  if(!files::read( m_filepath.toStdString(), content) || content.empty())
     return;
 
   // Split line by line
@@ -84,7 +85,7 @@ void Properties::verify(Property property, const QString& value)
 
 Properties& Properties::instance()
 {
-  static Properties instance("resources/properties");
+  static Properties instance(QApplication::applicationDirPath() + "/" + "resources/properties");
   return instance;
 }
 

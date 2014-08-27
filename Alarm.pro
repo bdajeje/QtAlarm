@@ -34,4 +34,6 @@ HEADERS  += mainwindow.hpp \
     utils/strings.hpp \
     widget/chrono_widget.hpp \
     widget/clock_widget.hpp \
-    utils/math.hpp
+    utils/math.hpp \
+    utils/resources_manager.hpp \
+    utils/icons_manager.hpp

@@ -1,7 +1,8 @@
 #include "sound_options.hpp"
 
-#include <utils/properties.hpp>
-#include <utils/strings.hpp>
+#include "utils/properties.hpp"
+#include "utils/strings.hpp"
+#include "utils/icons_manager.hpp"
 
 #include <QFileDialog>
 #include <QKeyEvent>
@@ -12,7 +13,7 @@ SoundOptions::SoundOptions(QWidget *parent, Qt::WindowFlags flags)
   : QDialog(parent, flags)
 {
   setWindowTitle(tr("Sound Options"));
-  setWindowIcon(QIcon("resources/images/sounds.jpg"));
+  setWindowIcon(utils::IconsManager::get("sounds.jpg"));
 
   auto main_layout = new QVBoxLayout;
 
