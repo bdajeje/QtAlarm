@@ -10,15 +10,10 @@ namespace utils {
 
 /*! Existing properties */
 enum Property { AlarmFile, Volume, DefaultSound, FadeVolume,
+                LastUsedTab,
                 ClockHour, ClockMin, ClockSec,
                 ChronoHour, ChronoMin, ChronoSec,
-                ClockRepeatMonday,
-                ClockRepeatTuesday,
-                ClockRepeatWednesday,
-                ClockRepeatThursday,
-                ClockRepeatFriday,
-                ClockRepeatSaturday,
-                ClockRepeatSunday,
+                ClockRepeatMonday, ClockRepeatTuesday, ClockRepeatWednesday, ClockRepeatThursday, ClockRepeatFriday, ClockRepeatSaturday, ClockRepeatSunday,
                 Undefined };
 
 Property toProperty(const QString& from);

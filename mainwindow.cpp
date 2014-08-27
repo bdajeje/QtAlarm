@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
   : QMainWindow(parent)
 {
   auto central_widget = new QWidget(this);
-  auto main_layout = new QVBoxLayout();
+  auto main_layout    = new QVBoxLayout();
 
   // Create tab widget
   auto widget_tab = new QTabWidget;
@@ -41,8 +41,8 @@ MainWindow::MainWindow(QWidget *parent)
   // System tray
   m_tray_icon = new QSystemTrayIcon(icon, this);
   m_tray_icon->show();
-  m_tray_icon->setToolTip(tr("Alarm"));
   m_tray_icon->setContextMenu( createTrayMenu() );
+  defaultToolTip();
 
   // Media player
   m_media_player = new QMediaPlayer(this);
@@ -56,15 +56,26 @@ MainWindow::MainWindow(QWidget *parent)
   central_widget->setLayout(main_layout);
   setCentralWidget(central_widget);
 
+  // Open last used tab by default
+  widget_tab->setCurrentIndex( utils::Properties::get(utils::Property::LastUsedTab).toInt() );
+
+  // Menu
   createMenu();
 
   // Connections
   connect(chrono_tab, SIGNAL(timeout()), this, SLOT(timeout()));
   connect(alarm_tab, SIGNAL(timeout()), this, SLOT(timeout()));
-  connect(chrono_tab, SIGNAL(stopped()), this, SLOT(stopSound()));
-  connect(alarm_tab, SIGNAL(stopped()), this, SLOT(stopSound()));
+  connect(chrono_tab, SIGNAL(stopped()), this, SLOT(alarmStopped()));
+  connect(alarm_tab, SIGNAL(stopped()), this, SLOT(alarmStopped()));
+  connect(chrono_tab, SIGNAL(started()), this, SLOT(alarmStarted()));
+  connect(alarm_tab, SIGNAL(started()), this, SLOT(alarmStarted()));
+  connect(chrono_tab, SIGNAL(countdownUpdated(int)), this, SLOT(countdownUpdated(int)));
+  connect(alarm_tab, SIGNAL(countdownUpdated(int)), this, SLOT(countdownUpdated(int)));
+  connect(this, SIGNAL(menuStopSound()), chrono_tab, SLOT(cancelState()));
+  connect(this, SIGNAL(menuStopSound()), alarm_tab, SLOT(cancelState()));
   connect(m_tray_icon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(toggleWindowVisibility(QSystemTrayIcon::ActivationReason)));
   connect(m_media_player, SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(alarmStatusChanged(QMediaPlayer::State)));
+  connect(widget_tab, SIGNAL(currentChanged(int)), this, SLOT(tabChanged(int)));
 }
 
 QString MainWindow::fileToPlay()
@@ -109,11 +120,14 @@ void MainWindow::raiseWindow()
 
 void MainWindow::timeout()
 {
+  // Starting new alarm
+  m_stopped = false;
+
   // Bring window in front of the screen
   raiseWindow();
 
-  // Starting new alarm
-  m_stopped = false;
+  // Restore default tooltip message
+  defaultToolTip();
 
   // Show notification
   m_tray_icon->showMessage(tr("Alarm"), tr("It's time"));
@@ -174,7 +188,18 @@ void MainWindow::createMenu()
 QMenu* MainWindow::createTrayMenu()
 {
   QMenu* tray_menu = new QMenu();
+
+  // Stop alarm
+  m_action_stop_alarm = new QAction(tr("&Stop"), this);
+  m_action_stop_alarm->setStatusTip(tr("Stop alarm"));
+  m_action_stop_alarm->setIcon(QIcon("resources/images/stop.ico"));
+  m_action_stop_alarm->setEnabled(false);
+  connect(m_action_stop_alarm, SIGNAL(triggered()), this, SIGNAL(menuStopSound()));
+  tray_menu->addAction( m_action_stop_alarm );
+
+  // Quit
   tray_menu->addAction( createQuitAction() );
+
   return tray_menu;
 }
 
@@ -235,4 +260,31 @@ void MainWindow::alarmStatusChanged(QMediaPlayer::State state)
 {
   if( !m_stopped && state == QMediaPlayer::State::StoppedState )
     timeout();
+}
+
+void MainWindow::alarmStarted()
+{
+  m_action_stop_alarm->setEnabled(true);
+}
+
+void MainWindow::alarmStopped()
+{
+  m_action_stop_alarm->setEnabled(false);
+  stopSound();
+}
+
+void MainWindow::countdownUpdated(int remaining_seconds)
+{
+  // Update progression in tooltip window
+  m_tray_icon->setToolTip(tr("Time in: ") + QString::number(remaining_seconds) + " seconds");
+}
+
+void MainWindow::defaultToolTip()
+{
+  m_tray_icon->setToolTip(tr("Alarm"));
+}
+
+void MainWindow::tabChanged(int index)
+{
+  utils::Properties::save(utils::Property::LastUsedTab, QString::number(index));
 }

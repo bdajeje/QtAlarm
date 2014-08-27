@@ -31,10 +31,12 @@ TimeWidget::TimeWidget(QWidget *parent)
 
   // Widgets placement
   auto time_label_layout = new QHBoxLayout;
+  time_label_layout->setAlignment(Qt::AlignTop);
   time_label_layout->addWidget(widget_hours_label);
   time_label_layout->addWidget(widget_mins_label);
   time_label_layout->addWidget(widget_secs_label);
   auto time_input_layout = new QHBoxLayout;
+  time_input_layout->setAlignment(Qt::AlignTop);
   time_input_layout->addWidget(m_widget_hours_input);
   time_input_layout->addWidget(m_widget_mins_input);
   time_input_layout->addWidget(m_widget_secs_input);
@@ -98,6 +100,8 @@ void TimeWidget::startState()
 
   // Start the timer
   m_timer->start(1000); // In milliseconds
+
+  emit started();
 }
 
 void TimeWidget::countdownReached()
@@ -124,6 +128,8 @@ void TimeWidget::updateTime()
 
   // Update progress bar text
   updateProgressText();
+
+  emit countdownUpdated(m_widget_progress->value());
 }
 
 void TimeWidget::updateProgressText()
@@ -140,3 +146,4 @@ void TimeWidget::updateProgressText()
   format.append( QString::number(seconds) + tr(" secs") );
   m_widget_progress->setFormat(format);
 }
+

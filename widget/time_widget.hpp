@@ -23,8 +23,6 @@ class TimeWidget : public QWidget
 
     virtual int timeToWait() const = 0;
     virtual void saveValues() const = 0;
-    void cancelState();
-    void startState();
     void countdownReached();
     void updateProgressText();
 
@@ -53,10 +51,15 @@ class TimeWidget : public QWidget
     /*! Call every second when timer is active to update UI time related */
     void updateTime();
 
+    void cancelState();
+    void startState();
+
   signals:
 
     void timeout();
     void stopped();
+    void started();
+    void countdownUpdated(int remaining_seconds);
 };
 
 #endif // TIME_WIDGET_HPP

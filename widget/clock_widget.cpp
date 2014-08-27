@@ -5,6 +5,8 @@
 #include <QLabel>
 #include <QTime>
 
+#include "widget/jlabel.hpp"
+
 const std::array<utils::Property, 7> ClockWidget::day_property { { utils::Property::ClockRepeatMonday,
                                                                    utils::Property::ClockRepeatTuesday,
                                                                    utils::Property::ClockRepeatWednesday,
@@ -22,12 +24,16 @@ ClockWidget::ClockWidget(QWidget *parent)
   const char* days[] = {"M", "T", "W", "T", "F", "S", "S"};
   for( size_t i = 0; i < number_days; ++i )
   {
-    auto day_layout = new QVBoxLayout();
-    auto repeat_day = new QCheckBox();
-    m_widget_days[i] = new QCheckBox(repeat_day);
-    day_layout->addWidget( new QLabel(days[i]) );
+    auto day_layout  = new QVBoxLayout();
+    auto repeat_day  = new QCheckBox();
+    auto label       = new JLabel(days[i]);
+
+    m_widget_days[i] = repeat_day;
+    day_layout->addWidget( label );
     day_layout->addWidget(repeat_day);
     days_layout->addLayout(day_layout);
+
+    connect(label, SIGNAL(clicked()), repeat_day, SLOT(click()));
   }
 
   m_main_layout->insertLayout(2, days_layout);

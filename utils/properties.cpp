@@ -27,6 +27,7 @@ namespace properties {
   const QString repeat_saturday  = "repeat_saturday";
   const QString repeat_sunday    = "repeat_sunday";
   const QString volume_fading    = "volume_fading";
+  const QString last_used_tab    = "last_used_tab";
   const QString undefined        = "Undefined property";
 }
 
@@ -137,6 +138,8 @@ Property toProperty(const QString& from)
     return Property::ClockRepeatSunday;
   else if(clean_from == properties::volume_fading )
     return Property::FadeVolume;
+  else if(clean_from == properties::last_used_tab )
+    return Property::LastUsedTab;
 
   std::cerr << "Unknown property: " << from.toStdString() << std::endl;
   return Property::Undefined;
@@ -147,7 +150,7 @@ const QString& toString(Property property)
   switch(property)
   {
     case Property::AlarmFile:            return properties::sound_file;
-    case Property::Volume:          return properties::sound_volume;
+    case Property::Volume:               return properties::sound_volume;
     case Property::DefaultSound:         return properties::default_sound;
     case Property::ClockHour:            return properties::alarm_hour;
     case Property::ClockMin:             return properties::alarm_min;
@@ -163,6 +166,7 @@ const QString& toString(Property property)
     case Property::ClockRepeatSaturday:  return properties::repeat_saturday;
     case Property::ClockRepeatSunday:    return properties::repeat_sunday;
     case Property::FadeVolume:           return properties::volume_fading;
+    case Property::LastUsedTab:          return properties::last_used_tab;
     default:
     {
       std::cerr << "Unknown property: " << property << std::endl;
