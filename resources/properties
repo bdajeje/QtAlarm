@@ -1,13 +1,13 @@
-sound_file=/home/jeje/Desktop/test_sounds/KDE-Window-Shade-Up.ogg
+sound_file=/home/jeje/Desktop/test_sounds/Vol. 7 - Zwischen Sonnenschein und Vogelgezwitscher.mp3
 sound_volume=100
 sound_default=resources/sounds/default.ogg
-volume_fading=0
+volume_fading=30
 alarm_hour=14
 alarm_min=0
 alarm_sec=0
 chrono_hour=0
 chrono_min=0
-chrono_sec=3
+chrono_sec=1
 repeat_monday=0
 repeat_tuesday=0
 repeat_wednesday=0

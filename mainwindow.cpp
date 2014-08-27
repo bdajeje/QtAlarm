@@ -123,11 +123,8 @@ void MainWindow::timeout()
   m_media_player->setMedia(QUrl::fromLocalFile( file_to_play ));
 
   // Set volume
-  auto increase_time = utils::Properties::get(utils::Property::FadeVolume).toInt();
-  if( increase_time == 0 )
-  {
+  if( utils::Properties::get(utils::Property::FadeVolume).toInt() == 0 )
     m_media_player->setVolume( utils::Properties::get(utils::Property::Volume).toInt() );
-  }
   else
   {
     m_media_player->setVolume( 0 );
@@ -135,7 +132,7 @@ void MainWindow::timeout()
   }
 
   // Start alarm sound
-  m_media_player->play();  std::cout << "playing: " << file_to_play.toStdString() << " at " << m_media_player->volume() << std::endl;
+  m_media_player->play();
 }
 
 QString MainWindow::addApplicationPath(QString path)
@@ -214,8 +211,11 @@ void MainWindow::stopSound()
 }
 
 void MainWindow::increaseVolume()
-{ std::cout << "increase volume" << std::endl;
-  const auto fade_time = utils::Properties::get( utils::Property::FadeVolume ).toFloat(); std::cout << "fade time: " << fade_time << std::endl;
+{
+  if(m_stopped)
+    return;
+
+  const auto fade_time = utils::Properties::get( utils::Property::FadeVolume ).toFloat();
   if( fade_time <= 0 )
     return;
 
@@ -223,21 +223,16 @@ void MainWindow::increaseVolume()
   const auto raise = utils::Properties::get( utils::Property::Volume ).toFloat() / fade_time;
   m_media_player->setVolume( m_media_player->volume() + raise );
 
-  std::cout << "volume is now set to : " << m_media_player->volume() << std::endl;
-
   // Are we done with slowly inscreasing?
   if( m_media_player->volume() >= 100 )
     return;
-std::cout << "starting again" << std::endl;
+
   // Update every second
   QTimer::singleShot(1000, this, SLOT(increaseVolume()));
 }
 
 void MainWindow::alarmStatusChanged(QMediaPlayer::State state)
-{ std::cout << "status changed: " << state << std::endl;
+{
   if( !m_stopped && state == QMediaPlayer::State::StoppedState )
-  {
-    std::cout << "relaunching" << std::endl;
     timeout();
-  }
 }
