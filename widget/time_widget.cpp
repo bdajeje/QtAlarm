@@ -134,16 +134,46 @@ void TimeWidget::updateTime()
 
 void TimeWidget::updateProgressText()
 {
-  const auto remaining_time = m_widget_progress->value();
-  const auto hours   = remaining_time / secs_in_one_hour;
-  const auto minutes = (remaining_time - (hours * secs_in_one_hour)) / secs_in_one_minute;
-  const auto seconds = remaining_time - (hours * secs_in_one_hour) - (minutes * secs_in_one_minute);
-  QString format;
-  if(hours > 0)
-    format.append( QString::number(hours) + tr(" hours ") );
-  if(minutes > 0)
-    format.append( QString::number(minutes) + tr(" mins ") );
-  format.append( QString::number(seconds) + tr(" secs") );
-  m_widget_progress->setFormat(format);
+  const auto times  = timesFromSeconds( remainingSeconds() );
+  const int hours   = std::get<0>(times);
+  const int minutes = std::get<1>(times);
+  const int seconds = std::get<2>(times);
+
+  m_widget_progress->setFormat( progressText(hours, minutes, seconds) );
 }
 
+std::tuple<unsigned int,unsigned int,unsigned int> TimeWidget::timesFromSeconds(unsigned int total_seconds)
+{
+  const auto hours   = total_seconds / secs_in_one_hour;
+  const auto minutes = (total_seconds - (hours * secs_in_one_hour)) / secs_in_one_minute;
+  const auto seconds = total_seconds - (hours * secs_in_one_hour) - (minutes * secs_in_one_minute);
+
+  return std::make_tuple(hours, minutes, seconds);
+}
+
+QString TimeWidget::progressText(unsigned int hours, unsigned int minutes, unsigned int seconds, bool short_version)
+{
+  QString format;
+
+  if(hours > 0)
+  {
+    int days = 0;
+    while( hours > hours_in_one_day )
+    {
+      hours -= hours_in_one_day;
+      days++;
+    }
+
+    if( days > 0 )
+      format.append( QString::number(days) + " " + (short_version ? tr("d") : tr("days")) + " " );
+
+    format.append( QString::number(hours) + " " + (short_version ? tr("h") : tr("hours")) + " " );
+  }
+
+  if(minutes > 0)
+    format.append( QString::number(minutes) + " " + (short_version ? tr("m") : tr("mins")) + " " );
+
+  format.append( QString::number(seconds) + " " + (short_version ? tr("s") : tr("secs")) + " " );
+
+  return format;
+}

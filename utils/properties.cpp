@@ -51,7 +51,7 @@ void Properties::initProperties()
   m_properties_keys[LastUsedTab]          = "last_used_tab";
   m_properties_keys[ClockHour]            = "alarm_hour";
   m_properties_keys[ClockMin]             = "alarm_min";
-  m_properties_keys[ClockSec]             = "alarm_min";
+  m_properties_keys[ClockSec]             = "alarm_sec";
   m_properties_keys[ChronoHour]           = "chrono_hour";
   m_properties_keys[ChronoMin]            = "chrono_min";
   m_properties_keys[ChronoSec]            = "chrono_sec";

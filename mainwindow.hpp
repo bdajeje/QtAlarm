@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_HPP
 #define MAINWINDOW_HPP
 
+#include "widget/chrono_widget.hpp"
+#include "widget/clock_widget.hpp"
 #include "widget/sound_options.hpp"
 
 #include <QMainWindow>
@@ -24,6 +26,7 @@ class MainWindow : public QMainWindow
     QString addApplicationPath(QString path);
     void raiseWindow();
     void defaultToolTip();
+    QString remainingTimeStr( const TimeWidget* time_widget );
 
   private:
 
@@ -31,6 +34,8 @@ class MainWindow : public QMainWindow
     QMediaPlayer*    m_media_player;
     SoundOptions*    m_sound_options;
     QAction*         m_action_stop_alarm;
+    ClockWidget*     m_alarm_tab;
+    ChronoWidget*    m_chrono_tab;
     bool             m_stopped {true};
 
   public slots:
@@ -44,7 +49,7 @@ class MainWindow : public QMainWindow
     void alarmStatusChanged(QMediaPlayer::State status);
     void alarmStarted();
     void alarmStopped();
-    void countdownUpdated(int remaining_seconds);
+    void countdownUpdated();
     void tabChanged(int index);
 
   signals:

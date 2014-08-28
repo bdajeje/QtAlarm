@@ -19,6 +19,12 @@ class TimeWidget : public QWidget
 
     virtual ~TimeWidget() {}
 
+    static QString progressText(unsigned int hours, unsigned int minutes, unsigned int seconds, bool short_version = false);
+    static std::tuple<unsigned int,unsigned int,unsigned int> timesFromSeconds(unsigned int total_seconds);
+
+    bool isActive() const { return m_active; }
+    unsigned int remainingSeconds() const { return m_widget_progress->value(); }
+
   protected:
 
     virtual int timeToWait() const = 0;
@@ -42,6 +48,7 @@ class TimeWidget : public QWidget
     static constexpr unsigned int secs_in_one_day    = 86400;
     static constexpr unsigned int secs_in_one_hour   = 3600;
     static constexpr unsigned int secs_in_one_minute = 60;
+    static constexpr unsigned int hours_in_one_day   = 24;
 
   public slots:
 

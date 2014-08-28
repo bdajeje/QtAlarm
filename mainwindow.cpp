@@ -6,8 +6,6 @@
 #include "utils/math.hpp"
 #include "utils/properties.hpp"
 #include "utils/icons_manager.hpp"
-#include "widget/clock_widget.hpp"
-#include "widget/chrono_widget.hpp"
 
 #include <QCoreApplication>
 #include <QDir>
@@ -28,12 +26,12 @@ MainWindow::MainWindow(QWidget *parent)
   auto widget_tab = new QTabWidget;
 
   // First tab
-  auto alarm_tab = new ClockWidget();
-  widget_tab->addTab(alarm_tab, tr("Alarm"));
+  m_alarm_tab = new ClockWidget();
+  widget_tab->addTab(m_alarm_tab, tr("Alarm"));
 
   // Second tab
-  auto chrono_tab = new ChronoWidget();
-  widget_tab->addTab(chrono_tab, tr("Chrono"));
+  m_chrono_tab = new ChronoWidget();
+  widget_tab->addTab(m_chrono_tab, tr("Chrono"));
 
   // Window icon
   const QIcon& icon = utils::IconsManager::get("icon.png");
@@ -64,16 +62,16 @@ MainWindow::MainWindow(QWidget *parent)
   createMenu();
 
   // Connections
-  connect(chrono_tab, SIGNAL(timeout()), this, SLOT(timeout()));
-  connect(alarm_tab, SIGNAL(timeout()), this, SLOT(timeout()));
-  connect(chrono_tab, SIGNAL(stopped()), this, SLOT(alarmStopped()));
-  connect(alarm_tab, SIGNAL(stopped()), this, SLOT(alarmStopped()));
-  connect(chrono_tab, SIGNAL(started()), this, SLOT(alarmStarted()));
-  connect(alarm_tab, SIGNAL(started()), this, SLOT(alarmStarted()));
-  connect(chrono_tab, SIGNAL(countdownUpdated(int)), this, SLOT(countdownUpdated(int)));
-  connect(alarm_tab, SIGNAL(countdownUpdated(int)), this, SLOT(countdownUpdated(int)));
-  connect(this, SIGNAL(menuStopSound()), chrono_tab, SLOT(cancelState()));
-  connect(this, SIGNAL(menuStopSound()), alarm_tab, SLOT(cancelState()));
+  connect(m_chrono_tab, SIGNAL(timeout()), this, SLOT(timeout()));
+  connect(m_alarm_tab, SIGNAL(timeout()), this, SLOT(timeout()));
+  connect(m_chrono_tab, SIGNAL(stopped()), this, SLOT(alarmStopped()));
+  connect(m_alarm_tab, SIGNAL(stopped()), this, SLOT(alarmStopped()));
+  connect(m_chrono_tab, SIGNAL(started()), this, SLOT(alarmStarted()));
+  connect(m_alarm_tab, SIGNAL(started()), this, SLOT(alarmStarted()));
+  connect(m_chrono_tab, SIGNAL(countdownUpdated(int)), this, SLOT(countdownUpdated()));
+  connect(m_alarm_tab, SIGNAL(countdownUpdated(int)), this, SLOT(countdownUpdated()));
+  connect(this, SIGNAL(menuStopSound()), m_chrono_tab, SLOT(cancelState()));
+  connect(this, SIGNAL(menuStopSound()), m_alarm_tab, SLOT(cancelState()));
   connect(m_tray_icon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(toggleWindowVisibility(QSystemTrayIcon::ActivationReason)));
   connect(m_media_player, SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(alarmStatusChanged(QMediaPlayer::State)));
   connect(widget_tab, SIGNAL(currentChanged(int)), this, SLOT(tabChanged(int)));
@@ -296,10 +294,24 @@ void MainWindow::alarmStopped()
   stopSound();
 }
 
-void MainWindow::countdownUpdated(int remaining_seconds)
+void MainWindow::countdownUpdated()
 {
   // Update progression in tooltip window
-  m_tray_icon->setToolTip(tr("Time in: ") + QString::number(remaining_seconds) + " seconds");
+  QString text;
+
+  if( m_alarm_tab->isActive() )
+   text.append( tr("Alarm in ") + remainingTimeStr( m_alarm_tab ) + "\n" );
+
+  if( m_chrono_tab->isActive() )
+   text.append( tr("Chrono in ") + remainingTimeStr( m_chrono_tab ) + "\n" );
+
+  m_tray_icon->setToolTip(text);
+}
+
+QString MainWindow::remainingTimeStr( const TimeWidget* time_widget )
+{
+  const auto times = TimeWidget::timesFromSeconds( time_widget->remainingSeconds() );
+  return TimeWidget::progressText( std::get<0>(times), std::get<1>(times), std::get<2>(times) );
 }
 
 void MainWindow::defaultToolTip()
