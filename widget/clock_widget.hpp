@@ -24,6 +24,12 @@ class ClockWidget final : public TimeWidget
     virtual void saveValues() const override;
     QDateTime nextDateTime() const;
     QDateTime selectedDateTime() const;
+    void restart();
+
+  public slots:
+
+    virtual void startState() override;
+    virtual void cancelState() override;
 };
 
 #endif // CLOCK_WIDGET_HPP

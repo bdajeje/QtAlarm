@@ -60,6 +60,9 @@ ClockWidget::ClockWidget(QWidget *parent)
     if( utils::Properties::get( day_property[i] ).toInt() )
       m_widget_days[i]->setChecked(true);
   }
+
+  // Restart alarm if application has been shutdown while alarm was running
+  restart();
 }
 
 int ClockWidget::timeToWait() const
@@ -72,6 +75,20 @@ int ClockWidget::timeToWait() const
 QDateTime ClockWidget::selectedDateTime() const
 {
   return QDateTime(QDate::currentDate(), {m_widget_hours_input->value(), m_widget_mins_input->value(), m_widget_secs_input->value()});
+}
+
+void ClockWidget::startState()
+{
+  // Save currently running state so if computer shutdowns, we start time again on application start up
+  utils::Properties::save( utils::Property::ClosedWhileRunning, "1" );
+
+  TimeWidget::startState();
+}
+
+void ClockWidget::cancelState()
+{
+  utils::Properties::save( utils::Property::ClosedWhileRunning, "0" );
+  TimeWidget::cancelState();
 }
 
 QDateTime ClockWidget::nextDateTime() const
@@ -110,4 +127,10 @@ void ClockWidget::saveValues() const
   utils::Properties::save( utils::Property::ClockSec, QString::number(m_widget_secs_input->value()) );
   for( int i = 0; i < number_days; ++i )
     utils::Properties::save( day_property[i], QString::number(m_widget_days[i]->isChecked()) );
+}
+
+void ClockWidget::restart()
+{
+  if( utils::Properties::get( utils::Property::ClosedWhileRunning).toInt() )
+    startState();
 }

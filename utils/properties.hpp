@@ -10,7 +10,7 @@ namespace utils {
 
 /*! Existing properties */
 enum Property { AlarmFile, Volume, DefaultSound, FadeVolume,
-                LastUsedTab,
+                LastUsedTab, ClosedWhileRunning,
                 ClockHour, ClockMin, ClockSec,
                 ChronoHour, ChronoMin, ChronoSec,
                 ClockRepeatMonday, ClockRepeatTuesday, ClockRepeatWednesday, ClockRepeatThursday, ClockRepeatFriday, ClockRepeatSaturday, ClockRepeatSunday,

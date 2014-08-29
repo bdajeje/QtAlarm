@@ -58,8 +58,8 @@ class TimeWidget : public QWidget
     /*! Call every second when timer is active to update UI time related */
     void updateTime();
 
-    void cancelState();
-    void startState();
+    virtual void cancelState();
+    virtual void startState();
 
   signals:
 

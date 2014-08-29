@@ -62,6 +62,7 @@ void Properties::initProperties()
   m_properties_keys[ClockRepeatFriday]    = "repeat_friday";
   m_properties_keys[ClockRepeatSaturday]  = "repeat_saturday";
   m_properties_keys[ClockRepeatSunday]    = "repeat_sunday";
+  m_properties_keys[ClosedWhileRunning]   = "closed_while_running";
   m_properties_keys[Undefined]            = "undefined";
 }
 
