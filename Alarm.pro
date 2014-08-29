@@ -37,3 +37,5 @@ HEADERS  += mainwindow.hpp \
     utils/math.hpp \
     utils/resources_manager.hpp \
     utils/icons_manager.hpp
+
+TRANSLATIONS = Alarm_en.ts Alarm_fr.ts
