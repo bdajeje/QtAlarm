@@ -43,7 +43,7 @@ class MainWindow : public QMainWindow
     void timeout();
     void showAbout();
     void showSoundOptions();
-    void toggleWindowVisibility(QSystemTrayIcon::ActivationReason);
+    void toggleWindowVisibility(QSystemTrayIcon::ActivationReason = QSystemTrayIcon::Trigger);
     void increaseVolume();
     void stopSound();
     void alarmStatusChanged(QMediaPlayer::State status);

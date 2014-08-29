@@ -162,6 +162,12 @@ void MainWindow::createMenu()
 {
   // File
   auto menu_file = menuBar()->addMenu(tr("&File"));
+    // Minimize
+    auto action_minimized = new QAction(tr("&Minimize"), this);
+    action_minimized->setStatusTip(tr("Minimize application in system tray"));
+    action_minimized->setIcon(utils::IconsManager::get("minimize.png"));
+    connect(action_minimized, SIGNAL(triggered()), this, SLOT(toggleWindowVisibility()));
+    menu_file->addAction(action_minimized);
     // Quit
     menu_file->addAction( createQuitAction() );
 
