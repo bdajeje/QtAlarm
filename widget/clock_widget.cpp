@@ -81,9 +81,11 @@ QDateTime ClockWidget::nextDateTime() const
   bool found = false;
 
   // Try to find next day to trigger
+  if( next_date < QDateTime::currentDateTime() )
+    next_date = next_date.addDays(1);
   for( int i = 0; i < number_days; ++i )
   {
-    int day_in_week = next_date.date().dayOfWeek() - 1; // Day in week starts at 1
+    int day_in_week = next_date.date().dayOfWeek() - 1; // Day in week starts at 1 so minus 1
     int day_offset  = (day_in_week >= number_days) ? number_days - day_in_week : day_in_week;
     if( m_widget_days[day_offset]->isChecked() )
     {
