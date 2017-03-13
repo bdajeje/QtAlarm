@@ -3,6 +3,7 @@
 
 #include <QApplication>
 #include <QString>
+#include <QIcon>
 
 #include <map>
 
@@ -13,38 +14,38 @@ class ResourcesManager
 {
   public:
 
-    virtual ~ResourcesManager() {}
+	virtual ~ResourcesManager() {}
 
-    static ResourcesManager& instance()
-    {
-      static ResourcesManager instance(QApplication::applicationDirPath() + "/resources/images/");
-      return instance;
-    }
+	static ResourcesManager& instance()
+	{
+	  static ResourcesManager instance(QApplication::applicationDirPath() + "/resources/images/");
+	  return instance;
+	}
 
-    static T& get(const QString& name)
-    {
-      auto& resources = instance().m_resources;
+	static T& get(const QString& name)
+	{
+	  auto& resources = instance().m_resources;
 
-      auto found = resources.find(name);
-      if(found != resources.end())
-        return found->second;
+	  auto found = resources.find(name);
+	  if(found != resources.end())
+		return found->second;
 
-      resources[name] = T(instance().m_filepath + name);
-      return resources[name];
-    }
-
-  protected:
-
-    ResourcesManager(QString filepath)
-      : m_filepath{ filepath }
-    {}
+	  resources[name] = T(instance().m_filepath + name);
+	  return resources[name];
+	}
 
   protected:
 
-    /* Map a resource name to the resource */
-    std::map<QString, T> m_resources;
+	ResourcesManager(QString filepath)
+	  : m_filepath{ filepath }
+	{}
 
-    QString m_filepath;
+  protected:
+
+	/* Map a resource name to the resource */
+	std::map<QString, T> m_resources;
+
+	QString m_filepath;
 };
 
 } // utils

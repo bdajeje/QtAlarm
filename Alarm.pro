@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     utils/strings.cpp \
     widget/chrono_widget.cpp \
     widget/clock_widget.cpp \
-    utils/math.cpp
+    utils/math.cpp \
+    widget/snooze_options.cpp
 
 HEADERS  += mainwindow.hpp \
     widget/time_widget.hpp \
@@ -36,6 +37,7 @@ HEADERS  += mainwindow.hpp \
     widget/clock_widget.hpp \
     utils/math.hpp \
     utils/resources_manager.hpp \
-    utils/icons_manager.hpp
+    utils/icons_manager.hpp \
+    widget/snooze_options.hpp
 
 TRANSLATIONS = Alarm_en.ts Alarm_fr.ts

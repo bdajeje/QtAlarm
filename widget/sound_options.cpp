@@ -32,7 +32,7 @@ SoundOptions::SoundOptions(QWidget *parent, Qt::WindowFlags flags)
   m_widget_fading_label = new JLabel;
   m_widget_volume_fade = new QSlider(Qt::Orientation::Horizontal);
   m_widget_volume_fade->setMinimum(0);
-  m_widget_volume_fade->setMaximum(60);
+  m_widget_volume_fade->setMaximum(120);
   m_widget_volume_fade->setTickInterval(1);
   m_widget_volume_fade->setValue( utils::Properties::get(utils::Property::FadeVolume).toInt() );
 
@@ -63,7 +63,7 @@ SoundOptions::SoundOptions(QWidget *parent, Qt::WindowFlags flags)
 void SoundOptions::setSelectedPath(const QString& path)
 {
   if(path.isEmpty())
-    return;
+	return;
 
   updateSelectFileUI(path);
   utils::Properties::save( utils::Property::AlarmFile, path );
@@ -107,7 +107,7 @@ void SoundOptions::saveVolumeFading()
 void SoundOptions::keyReleaseEvent(QKeyEvent* event)
 {
   if( event->key() == Qt::Key_Escape )
-    close();
+	close();
   else
-    QWidget::keyReleaseEvent(event);
+	QWidget::keyReleaseEvent(event);
 }

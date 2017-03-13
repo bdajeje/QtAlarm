@@ -18,7 +18,7 @@ Properties::Properties(QString filepath)
   // Read property files
   std::string content;
   if(!files::read( m_filepath.toStdString(), content) || content.empty())
-    return;
+	return;
 
   // Split line by line
   QString properties_content(content.c_str());
@@ -27,11 +27,11 @@ Properties::Properties(QString filepath)
   // Iterate over lines to find property pairs
   for( const QString& line : lines )
   {
-    QStringList parts = line.split("=");
-    if(parts.size() < 2)
-      continue;
+	QStringList parts = line.split("=");
+	if(parts.size() < 2)
+	  continue;
 
-    set(parts.at(0), parts.at(1));
+	set(parts.at(0), parts.at(1));
   }
 
   // We are now considered as valid property
@@ -63,17 +63,18 @@ void Properties::initProperties()
   m_properties_keys[ClockRepeatSaturday]  = "repeat_saturday";
   m_properties_keys[ClockRepeatSunday]    = "repeat_sunday";
   m_properties_keys[ClosedWhileRunning]   = "closed_while_running";
+  m_properties_keys[SnoozeTime]		      = "snooze_time";
   m_properties_keys[Undefined]            = "undefined";
 }
 
 void Properties::set(QString key, QString value)
 {
   auto found = std::find_if(m_properties_keys.begin(), m_properties_keys.end(), [&key](std::pair<Property, QString> iterator){
-    return iterator.second == key;
+	return iterator.second == key;
   });
 
   if( found == m_properties_keys.end() )
-    return;
+	return;
 
   m_properties_values[found->first] = value;
 }
@@ -81,7 +82,7 @@ void Properties::set(QString key, QString value)
 void Properties::verify(Property property, const QString& value)
 {
   if( m_properties_values[property].isEmpty() )
-    m_properties_values[property] = value;
+	m_properties_values[property] = value;
 }
 
 Properties& Properties::instance()
@@ -101,7 +102,7 @@ bool Properties::save()
 {
   QString content;
   for( const auto it : m_properties_values )
-    content += m_properties_keys[it.first] + '=' + it.second + '\n';
+	content += m_properties_keys[it.first] + '=' + it.second + '\n';
 
   return files::create(m_filepath.toStdString(), content.toStdString());
 }

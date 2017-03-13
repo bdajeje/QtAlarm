@@ -1,7 +1,7 @@
-sound_file=/home/jeje/Desktop/test_sounds/Talent Mix #17 - De Kunstenaar - Poking The Beehive - 1daytrack.com.mp3
+sound_file=/home/jeremyg/Music
 sound_volume=100
 sound_default=resources/sounds/default.ogg
-volume_fading=60
+volume_fading=72
 last_used_tab=0
 closed_while_running=0
 alarm_hour=7
@@ -17,3 +17,4 @@ repeat_thursday=1
 repeat_friday=1
 repeat_saturday=0
 repeat_sunday=0
+snooze_time=6
