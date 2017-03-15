@@ -2,26 +2,25 @@
 
 #include <utils/properties.hpp>
 
-ChronoWidget::ChronoWidget(QWidget *parent)
-  : TimeWidget(parent)
+ChronoWidget::ChronoWidget()
 {
   const QString& hour_str = utils::Properties::get( utils::Property::ChronoHour );
   const QString& min_str  = utils::Properties::get( utils::Property::ChronoMin );
   const QString& sec_str  = utils::Properties::get( utils::Property::ChronoSec );
 
   if( !hour_str.isEmpty() )
-    m_widget_hours_input->setValue( hour_str.toInt() );
+	m_widget_hours_input->setValue( hour_str.toInt() );
   if( !min_str.isEmpty() )
-    m_widget_mins_input->setValue( min_str.toInt() );
+	m_widget_mins_input->setValue( min_str.toInt() );
   if( !sec_str.isEmpty() )
-    m_widget_secs_input->setValue( sec_str.toInt() );
+	m_widget_secs_input->setValue( sec_str.toInt() );
 }
 
 int ChronoWidget::timeToWait() const
 {
   return m_widget_hours_input->value() * secs_in_one_hour +
-         m_widget_mins_input->value() * secs_in_one_minute +
-         m_widget_secs_input->value();
+		 m_widget_mins_input->value() * secs_in_one_minute +
+		 m_widget_secs_input->value();
 }
 
 void ChronoWidget::saveValues() const

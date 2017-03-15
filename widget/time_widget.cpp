@@ -8,8 +8,7 @@
 #include <QHBoxLayout>
 #include <QSpinBox>
 
-TimeWidget::TimeWidget(QWidget *parent)
-  : QWidget(parent)
+TimeWidget::TimeWidget()
 {
   m_main_layout = new QVBoxLayout(this);
 
@@ -84,8 +83,8 @@ void TimeWidget::startState()
   // Protection against wrong value
   if( time_to_wait <= 0 )
   {
-    QMessageBox::warning(this, tr("Wrong values"), tr("You need to specify a time superior to 0"));
-    return;
+	QMessageBox::warning(this, tr("Wrong values"), tr("You need to specify a time superior to 0"));
+	return;
   }
 
   // Set active and update button text
@@ -124,7 +123,7 @@ void TimeWidget::updateTime()
   // Update progress bar value
   m_widget_progress->setValue( m_widget_progress->value() - 1 );
   if(m_widget_progress->value() == 0)
-    countdownReached();
+	countdownReached();
 
   // Update progress bar text
   updateProgressText();
@@ -157,21 +156,21 @@ QString TimeWidget::progressText(unsigned int hours, unsigned int minutes, unsig
 
   if(hours > 0)
   {
-    int days = 0;
-    while( hours > hours_in_one_day )
-    {
-      hours -= hours_in_one_day;
-      days++;
-    }
+	int days = 0;
+	while( hours > hours_in_one_day )
+	{
+	  hours -= hours_in_one_day;
+	  days++;
+	}
 
-    if( days > 0 )
-      format.append( QString::number(days) + " " + (short_version ? tr("d") : tr("days")) + " " );
+	if( days > 0 )
+	  format.append( QString::number(days) + " " + (short_version ? tr("d") : tr("days")) + " " );
 
-    format.append( QString::number(hours) + " " + (short_version ? tr("h") : tr("hours")) + " " );
+	format.append( QString::number(hours) + " " + (short_version ? tr("h") : tr("hours")) + " " );
   }
 
   if(minutes > 0)
-    format.append( QString::number(minutes) + " " + (short_version ? tr("m") : tr("mins")) + " " );
+	format.append( QString::number(minutes) + " " + (short_version ? tr("m") : tr("mins")) + " " );
 
   format.append( QString::number(seconds) + " " + (short_version ? tr("s") : tr("secs")) + " " );
 

@@ -7,12 +7,12 @@ class ChronoWidget final : public TimeWidget
 {
   public:
 
-    ChronoWidget(QWidget *parent = 0);
+	ChronoWidget();
 
   protected:
 
-    virtual int timeToWait() const override;
-    virtual void saveValues() const override;
+	virtual int timeToWait() const override;
+	virtual void saveValues() const override;
 };
 
 #endif // CHRONO_WIDGET_HPP

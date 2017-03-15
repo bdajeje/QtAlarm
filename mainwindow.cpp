@@ -104,7 +104,7 @@ QString MainWindow::fileToPlay()
 	}
 
 	// Randomly select a sound among the list of sounds
-	return utils::files::ensureDirEnd(filepath) + file_list.at( utils::random(0, file_list.size() - 1) );
+	return utils::files::ensureDirEnd(filepath) + file_list.at( utils::random(0, file_list.size()) );
   }
   else if( !QFile::exists(filepath) )
   {
