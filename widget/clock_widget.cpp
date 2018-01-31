@@ -22,25 +22,26 @@ ClockWidget::ClockWidget()
   m_snooze_button = new QPushButton("Snooze");
   m_snooze_button->setEnabled(false);
 	m_snooze_text    = new QLabel;
-  auto days_layout = new QHBoxLayout();
+	auto days_layout = new QHBoxLayout;
 
   const char* days[] = {"M", "T", "W", "T", "F", "S", "S"};
   for( size_t i = 0; i < number_days; ++i )
   {
-		auto day_layout  = new QVBoxLayout();
-		auto repeat_day  = new QCheckBox();
+		auto day_layout  = new QVBoxLayout;
+		auto repeat_day  = new QCheckBox;
 		auto label       = new JLabel(days[i]);
 
 		m_widget_days[i] = repeat_day;
-		day_layout->addWidget( label );
-		day_layout->addWidget(repeat_day);
+		day_layout->addWidget(label, 0, Qt::AlignCenter);
+		day_layout->addWidget(repeat_day, 0, Qt::AlignCenter);
 		days_layout->addLayout(day_layout);
 
 		connect(label, SIGNAL(clicked()), repeat_day, SLOT(click()));
   }
 
-  m_main_layout->insertLayout(2, days_layout);
-  m_main_layout->addWidget(m_snooze_button);
+	m_buttons_layout->addWidget(m_snooze_button);
+
+	m_main_layout->insertLayout(2, days_layout);
   m_main_layout->addWidget(m_snooze_text);
 
   // Set maximum values

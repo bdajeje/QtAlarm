@@ -55,6 +55,7 @@ class TimeWidget : public QWidget
   protected:
 
 		QVBoxLayout*  m_main_layout;
+		QHBoxLayout*  m_buttons_layout;
 		QPushButton*  m_widget_button;
 		QProgressBar* m_widget_progress;
 		QSpinBox*     m_widget_hours_input;

@@ -17,6 +17,7 @@ ChronoWidget::ChronoWidget()
 
 	m_note_area = new QTextEdit;
 	m_note_area->setPlaceholderText(tr("You can write a note here"));
+	m_note_area->setMaximumHeight(80); // \todo Arbitrary number is very ugly ...
 	m_main_layout->insertWidget(m_main_layout->indexOf(m_widget_progress), m_note_area, -1);
 }
 

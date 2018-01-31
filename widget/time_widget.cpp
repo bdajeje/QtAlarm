@@ -16,7 +16,7 @@ TimeWidget::TimeWidget()
 
   // Time inputs
   auto widget_hours_label = new JLabel(tr("Hours"));
-  m_widget_hours_input = new QSpinBox;
+	m_widget_hours_input = new QSpinBox;
   m_widget_hours_input->setMinimum(0);
   auto widget_mins_label = new JLabel(tr("Minutes"));
   m_widget_mins_input = new QSpinBox;
@@ -33,18 +33,21 @@ TimeWidget::TimeWidget()
   // Widgets placement
   auto time_label_layout = new QHBoxLayout;
   time_label_layout->setAlignment(Qt::AlignTop);
-  time_label_layout->addWidget(widget_hours_label);
-  time_label_layout->addWidget(widget_mins_label);
-  time_label_layout->addWidget(widget_secs_label);
+	time_label_layout->addWidget(widget_hours_label, 0, Qt::AlignCenter);
+	time_label_layout->addWidget(widget_mins_label, 0, Qt::AlignCenter);
+	time_label_layout->addWidget(widget_secs_label, 0, Qt::AlignCenter);
   auto time_input_layout = new QHBoxLayout;
   time_input_layout->setAlignment(Qt::AlignTop);
-  time_input_layout->addWidget(m_widget_hours_input);
-  time_input_layout->addWidget(m_widget_mins_input);
-  time_input_layout->addWidget(m_widget_secs_input);
+	time_input_layout->addWidget(m_widget_hours_input, 0, Qt::AlignTop);
+	time_input_layout->addWidget(m_widget_mins_input, 0, Qt::AlignTop);
+	time_input_layout->addWidget(m_widget_secs_input, 0, Qt::AlignTop);
   m_main_layout->addLayout(time_label_layout);
   m_main_layout->addLayout(time_input_layout);
   m_main_layout->addWidget(m_widget_progress);
-  m_main_layout->addWidget(m_widget_button);
+
+	m_buttons_layout = new QHBoxLayout;
+	m_buttons_layout->addWidget(m_widget_button);
+	m_main_layout->addLayout(m_buttons_layout);
 
   m_timer = new QTimer(this);
 
@@ -87,8 +90,8 @@ void TimeWidget::startState()
   // Protection against wrong value
   if( time_to_wait <= 0 )
   {
-	QMessageBox::warning(this, tr("Wrong values"), tr("You need to specify a time superior to 0"));
-	return;
+		QMessageBox::warning(this, tr("Wrong values"), tr("You need to specify a time superior to 0"));
+		return;
   }
 
   // Set active and update button text
