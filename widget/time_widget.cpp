@@ -3,9 +3,11 @@
 #include "widget/jlabel.hpp"
 
 #include <iostream>
+#include <memory>
 
-#include <QMessageBox>
+#include <QApplication>
 #include <QHBoxLayout>
+#include <QMessageBox>
 #include <QSpinBox>
 
 TimeWidget::TimeWidget()
@@ -49,7 +51,7 @@ TimeWidget::TimeWidget()
   // Events
   connect(widget_hours_label, SIGNAL(clicked()), m_widget_hours_input, SLOT(setFocus()));
   connect(widget_mins_label, SIGNAL(clicked()), m_widget_mins_input, SLOT(setFocus()));
-  connect(widget_secs_label, SIGNAL(clicked()), m_widget_secs_input, SLOT(setFocus()));
+	connect(widget_secs_label, SIGNAL(clicked()), m_widget_secs_input, SLOT(setFocus()));
   connect(m_widget_button, SIGNAL(pressed()), this, SLOT(toggleState()));
   connect(m_timer, SIGNAL(timeout()), this, SLOT(updateTime()));
 
@@ -68,6 +70,8 @@ void TimeWidget::cancelState()
   m_widget_progress->setValue(0);
   m_widget_progress->setTextVisible(false);
   m_timer->stop();
+
+	updateWindowTitle("Alarm");
 
   emit stopped();
 }
@@ -94,7 +98,7 @@ void TimeWidget::startState()
   // Update the progresss bar
   m_widget_progress->setMaximum(time_to_wait);
   m_widget_progress->setValue(time_to_wait);
-  updateProgressText();
+	updateProgressText(timesFromSeconds( remainingSeconds() ));
   m_widget_progress->setTextVisible(true);
 
   // Start the timer
@@ -114,6 +118,8 @@ void TimeWidget::countdownReached()
   // Focus button for easy stop
   m_widget_button->setFocus();
 
+	updateWindowTitle("It's time!");
+
   // Emit end of timer
   emit timeout();
 }
@@ -123,25 +129,33 @@ void TimeWidget::updateTime()
   // Update progress bar value
   m_widget_progress->setValue( m_widget_progress->value() - 1 );
   if(m_widget_progress->value() == 0)
-	countdownReached();
+		countdownReached();
+
+	const auto remaining_secs = remainingSeconds();
+	const auto times					= timesFromSeconds(remaining_secs);
 
   // Update progress bar text
-  updateProgressText();
+	updateProgressText(times);
+
+	// Update window's title
+	updateWindowTitle(progressText(times, true));
 
   emit countdownUpdated(m_widget_progress->value());
 }
 
-void TimeWidget::updateProgressText()
+void TimeWidget::updateWindowTitle(const QString& title)
 {
-  const auto times  = timesFromSeconds( remainingSeconds() );
-  const int hours   = std::get<0>(times);
-  const int minutes = std::get<1>(times);
-  const int seconds = std::get<2>(times);
-
-  m_widget_progress->setFormat( progressText(hours, minutes, seconds) );
+	auto active_window = QApplication::activeWindow();
+	if(active_window)
+		active_window->setWindowTitle(title);
 }
 
-std::tuple<unsigned int,unsigned int,unsigned int> TimeWidget::timesFromSeconds(unsigned int total_seconds)
+void TimeWidget::updateProgressText(const TimeParts& times)
+{
+	m_widget_progress->setFormat(progressText(times));
+}
+
+TimeParts TimeWidget::timesFromSeconds(unsigned int total_seconds)
 {
   const auto hours   = total_seconds / secs_in_one_hour;
   const auto minutes = (total_seconds - (hours * secs_in_one_hour)) / secs_in_one_minute;
@@ -150,29 +164,34 @@ std::tuple<unsigned int,unsigned int,unsigned int> TimeWidget::timesFromSeconds(
   return std::make_tuple(hours, minutes, seconds);
 }
 
-QString TimeWidget::progressText(unsigned int hours, unsigned int minutes, unsigned int seconds, bool short_version)
+QString TimeWidget::progressText(const TimeParts& times, bool short_version)
 {
+	unsigned int hours   = std::get<0>(times);
+	unsigned int minutes = std::get<1>(times);
+	unsigned int seconds = std::get<2>(times);
+
   QString format;
 
   if(hours > 0)
   {
-	int days = 0;
-	while( hours > hours_in_one_day )
-	{
-	  hours -= hours_in_one_day;
-	  days++;
-	}
+		int days = 0;
+		while( hours > hours_in_one_day )
+		{
+			hours -= hours_in_one_day;
+			days++;
+		}
 
-	if( days > 0 )
-	  format.append( QString::number(days) + " " + (short_version ? tr("d") : tr("days")) + " " );
+		if( days > 0 )
+			format.append( QString::number(days) + (short_version ? " " + tr("d") : tr("days")) + " " );
 
-	format.append( QString::number(hours) + " " + (short_version ? tr("h") : tr("hours")) + " " );
+		format.append( QString::number(hours) + (short_version ? " " + tr("h") : tr("hours")) + " " );
   }
 
   if(minutes > 0)
-	format.append( QString::number(minutes) + " " + (short_version ? tr("m") : tr("mins")) + " " );
+		format.append( QString::number(minutes) + (short_version ? tr("m") : " " + tr("mins")) + " " );
 
-  format.append( QString::number(seconds) + " " + (short_version ? tr("s") : tr("secs")) + " " );
+	if(seconds > 0)
+		format.append( QString::number(seconds) + (short_version ? tr("s") : " " + tr("secs")) );
 
   return format;
 }

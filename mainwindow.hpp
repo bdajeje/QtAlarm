@@ -7,7 +7,7 @@
 #include "widget/snooze_options.hpp"
 
 #include <QMainWindow>
-#include <QMediaPlayer>
+#include <QtMultimedia/qmediaplayer.h>
 #include <QSystemTrayIcon>
 
 class MainWindow : public QMainWindow

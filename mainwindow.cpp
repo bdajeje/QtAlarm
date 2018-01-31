@@ -333,7 +333,7 @@ void MainWindow::countdownUpdated()
 QString MainWindow::remainingTimeStr( const TimeWidget* time_widget )
 {
   const auto times = TimeWidget::timesFromSeconds( time_widget->remainingSeconds() );
-  return TimeWidget::progressText( std::get<0>(times), std::get<1>(times), std::get<2>(times) );
+	return TimeWidget::progressText(times);
 }
 
 void MainWindow::defaultToolTip()

@@ -1,18 +1,24 @@
 #ifndef CHRONO_WIDGET_HPP
 #define CHRONO_WIDGET_HPP
 
+#include <QTextEdit>
+
 #include "widget/time_widget.hpp"
 
 class ChronoWidget final : public TimeWidget
 {
   public:
 
-	ChronoWidget();
+		ChronoWidget();
 
   protected:
 
-	virtual int timeToWait() const override;
-	virtual void saveValues() const override;
+		virtual int timeToWait() const override;
+		virtual void saveValues() const override;
+
+	protected:
+
+		QTextEdit* m_note_area;
 };
 
 #endif // CHRONO_WIDGET_HPP
