@@ -38,9 +38,9 @@ MainWindow::MainWindow(QWidget *parent)
   setWindowIcon( icon );
 
   // System tray
-  m_tray_icon = new QSystemTrayIcon(icon, this);
-  m_tray_icon->show();
-  m_tray_icon->setContextMenu( createTrayMenu() );
+	m_tray_icon = new QSystemTrayIcon(icon, this);
+	m_tray_icon->show();
+	m_tray_icon->setContextMenu( createTrayMenu() );
   defaultToolTip();
 
   // Media player
@@ -76,7 +76,7 @@ MainWindow::MainWindow(QWidget *parent)
   connect(m_alarm_tab, SIGNAL(countdownUpdated(int)), this, SLOT(countdownUpdated()));
   connect(this, SIGNAL(menuStopSound()), m_chrono_tab, SLOT(cancelState()));
   connect(this, SIGNAL(menuStopSound()), m_alarm_tab, SLOT(cancelState()));
-  connect(m_tray_icon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(toggleWindowVisibility(QSystemTrayIcon::ActivationReason)));
+	connect(m_tray_icon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(toggleWindowVisibility(QSystemTrayIcon::ActivationReason)));
   connect(m_media_player, SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(alarmStatusChanged(QMediaPlayer::State)));
   connect(widget_tab, SIGNAL(currentChanged(int)), this, SLOT(tabChanged(int)));
 }
@@ -133,7 +133,7 @@ void MainWindow::timeout()
   defaultToolTip();
 
   // Show notification
-  m_tray_icon->showMessage(tr("Alarm"), tr("It's time"));
+	m_tray_icon->showMessage(tr("Alarm"), tr("It's time"));
 
   // Find media to play
   QString file_to_play = addApplicationPath( fileToPlay() );
@@ -223,8 +223,14 @@ QAction* MainWindow::createQuitAction()
   auto action_quit = new QAction(tr("&Quit"), this);
   action_quit->setStatusTip(tr("Quit application"));
   action_quit->setIcon(utils::IconsManager::get("quit.png"));
-  connect(action_quit, SIGNAL(triggered()), this, SLOT(close()));
+	connect(action_quit, SIGNAL(triggered()), this, SLOT(closeWindow()));
   return action_quit;
+}
+
+void MainWindow::closeWindow()
+{
+	delete m_tray_icon;
+	close();
 }
 
 void MainWindow::showAbout()
@@ -327,7 +333,7 @@ void MainWindow::countdownUpdated()
   if( m_chrono_tab->isActive() )
    text.append( tr("Chrono in ") + remainingTimeStr( m_chrono_tab ) + "\n" );
 
-  m_tray_icon->setToolTip(text);
+	m_tray_icon->setToolTip(text);
 }
 
 QString MainWindow::remainingTimeStr( const TimeWidget* time_widget )
@@ -338,7 +344,7 @@ QString MainWindow::remainingTimeStr( const TimeWidget* time_widget )
 
 void MainWindow::defaultToolTip()
 {
-  m_tray_icon->setToolTip(tr("Alarm"));
+	m_tray_icon->setToolTip(tr("Alarm"));
 }
 
 void MainWindow::tabChanged(int index)
