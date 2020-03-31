@@ -74,7 +74,7 @@ void TimeWidget::cancelState()
   m_widget_progress->setTextVisible(false);
   m_timer->stop();
 
-	updateWindowTitle("Alarm");
+  emit updateWindowTitle("Alarm");
 
   emit stopped();
 }
@@ -121,7 +121,7 @@ void TimeWidget::countdownReached()
   // Focus button for easy stop
   m_widget_button->setFocus();
 
-	updateWindowTitle("It's time!");
+  emit updateWindowTitle("It's time!");
 
   // Emit end of timer
   emit timeout();
@@ -141,17 +141,18 @@ void TimeWidget::updateTime()
 	updateProgressText(times);
 
 	// Update window's title
-	updateWindowTitle(progressText(times, true));
+	emit updateWindowTitle(progressText(times, true));
 
   emit countdownUpdated(m_widget_progress->value());
 }
 
-void TimeWidget::updateWindowTitle(const QString& title)
-{
-	auto active_window = QApplication::activeWindow();
-	if(active_window)
-		active_window->setWindowTitle(title);
-}
+//void TimeWidget::updateWindowTitle(const QString& title)
+//{
+////	auto active_window = QApplication::activeWindow();
+////	if(active_window)
+////		active_window->setWindowTitle(title);
+//	parent()->setWindowTitle(title);
+//}
 
 void TimeWidget::updateProgressText(const TimeParts& times)
 {

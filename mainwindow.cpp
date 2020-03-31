@@ -79,6 +79,8 @@ MainWindow::MainWindow(QWidget *parent)
 	connect(m_tray_icon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(toggleWindowVisibility(QSystemTrayIcon::ActivationReason)));
   connect(m_media_player, SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(alarmStatusChanged(QMediaPlayer::State)));
   connect(widget_tab, SIGNAL(currentChanged(int)), this, SLOT(tabChanged(int)));
+  connect(m_alarm_tab, SIGNAL(updateWindowTitle(QString)), this, SLOT(updateTitle(QString)));
+  connect(m_chrono_tab, SIGNAL(updateWindowTitle(QString)), this, SLOT(updateTitle(QString)));
 }
 
 QString MainWindow::fileToPlay()
@@ -350,4 +352,9 @@ void MainWindow::defaultToolTip()
 void MainWindow::tabChanged(int index)
 {
   utils::Properties::save(utils::Property::LastUsedTab, QString::number(index));
+}
+
+void MainWindow::updateTitle(QString title)
+{
+  setWindowTitle(title);
 }

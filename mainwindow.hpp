@@ -55,6 +55,7 @@ class MainWindow : public QMainWindow
 		void countdownUpdated();
 		void tabChanged(int index);
 		void closeWindow();
+		void updateTitle(QString);
 
   signals:
 

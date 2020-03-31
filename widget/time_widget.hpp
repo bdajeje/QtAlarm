@@ -32,7 +32,6 @@ class TimeWidget : public QWidget
 		virtual void saveValues() const = 0;
 		virtual void countdownReached();
 		void updateProgressText(const TimeParts& times);
-		void updateWindowTitle(const QString& title);
 
 	protected slots:
 
@@ -51,6 +50,7 @@ class TimeWidget : public QWidget
 		void stopped();
 		void started();
 		void countdownUpdated(int remaining_seconds);
+		void updateWindowTitle(const QString& title);
 
   protected:
 
